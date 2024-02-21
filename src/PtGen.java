@@ -122,7 +122,8 @@ public class PtGen {
     private static int tCour; // type de l'expression compilee
     private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
   
-   
+	private static int vAdr = 0;
+	
     // TABLE DES SYMBOLES
     // ------------------
     //
@@ -197,6 +198,9 @@ public class PtGen {
 		it = 0;
 		bc = 1;
 		
+		// Variable pour gérer les adresses des variables.
+		vAdr = 0;
+
 		// pile des reprises pour compilation des branchements en avant
 		pileRep = new TPileRep(); 
 		// programme objet = code Mapile de l'unite en cours de compilation
@@ -226,7 +230,17 @@ public class PtGen {
 			initialisations();
 			break;
 		
-		// TODO
+		case 1:
+			if(presentIdent(1) != 0) {
+				placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
+			}
+			break;
+
+		case 2:
+			po.produire(RESERVER);
+			po.produire(vAdr);
+			vAdr = 0;
+			break;
 			
 		case 255 : 
 			afftabSymb(); // affichage de la table des symboles en fin de compilation
