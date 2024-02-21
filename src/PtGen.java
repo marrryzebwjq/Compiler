@@ -229,6 +229,32 @@ public class PtGen {
 
 		
 
+		case 51: //je suis pas sûre de ce que je fais //TODO regardez pas je vais changer ça
+		{
+			Ecriture.ecrireString("contenug");
+			EltTabSymb e = tabSymb[UtilLex.numIdCourant];
+
+			switch (e.categorie)
+			{
+				case CONSTANTE:
+				{
+					po.produire(e.info);
+					break;
+				}
+				case VARGLOBALE:
+				{
+					po.produire(CONTENUG);
+					po.produire(e.info);
+					break;
+				}
+
+				default: break;
+			}
+			
+		}
+		
+		
+
 		case 113: // exp2 -> 'non'
 		{
 			verifBool();
@@ -353,36 +379,10 @@ public class PtGen {
 			break;
 		}
 
-		case 255: // Fin de compilation
-		{
-
-		case 51: //je suis pas sûre de ce que je fais //TODO regardez pas je vais changer ça
-		{
-			Ecriture.ecrireString("contenug");
-			EltTabSymb e = tabSymb[UtilLex.numIdCourant];
-
-			switch (e.categorie)
-			{
-				case CONSTANTE:
-				{
-					po.produire(e.info);
-					break;
-				}
-				case VARGLOBALE:
-				{
-					po.produire(CONTENUG);
-					po.produire(e.info);
-					break;
-				}
-
-				default: break;
-			}
-			
-		}
-		
 		// TODO
 			
 		case 255 : 
+		{
 			afftabSymb(); // affichage de la table des symboles en fin de compilation
 			break;
 		}
