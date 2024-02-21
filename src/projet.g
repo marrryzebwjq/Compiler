@@ -125,6 +125,7 @@ inscond : 'cond'  expression  ':' instructions
 boucle  : 'ttq'  expression 'faire' instructions 'fait' 
   ;
   
+lecture: 'lire' '(' ident  ( ',' ident  )* ')'
 lecture: 'lire' '(' ident { PtGen.pt(51); } ( ',' ident { PtGen.pt(51); } )* ')' 
   ;
   
@@ -146,37 +147,37 @@ effmods :'(' (ident  (',' ident  )*)? ')'
 expression: (exp1) ('ou'  exp1  )*
   ;
   
-exp1  : exp2 ('et'  exp2  )*
+exp1  : exp2 ('et' exp2  )*
   ;
   
-exp2  : 'non' exp2 
-  | exp3  
+exp2  : 'non' exp2 {PtGen.pt(113);}
+  | exp3 {PtGen.pt(113);}
   ;
   
 exp3  : exp4 
-  ( '='   exp4 
-  | '<>'  exp4 
-  | '>'   exp4 
-  | '>='  exp4 
-  | '<'   exp4 
-  | '<='  exp4  
+  ( '='  exp4 {PtGen.pt(112);} // TODO: Mêmes types gauche et droite
+  | '<>' exp4 {PtGen.pt(111);}
+  | '>'  exp4 {PtGen.pt(110);}
+  | '>=' exp4 {PtGen.pt(109);}
+  | '<'  exp4 {PtGen.pt(108);}
+  | '<=' exp4 {PtGen.pt(107);}
   ) ?
   ;
   
 exp4  : exp5 
-        ('+'  exp5 
-        |'-'  exp5 
+        ('+' {PtGen.pt(100);} exp5 {PtGen.pt(106);}
+        |'-' {PtGen.pt(100);} exp5 {PtGen.pt(105);}
         )*
   ;
   
 exp5  : primaire 
-        (    '*'   primaire 
-          | 'div'  primaire 
+        (    '*'  {PtGen.pt(100);} primaire {PtGen.pt(104);}
+          | 'div' {PtGen.pt(100);} primaire {PtGen.pt(103);}
         )*
   ;
   
-primaire: valeur 
-  | ident  
+primaire: valeur {PtGen.pt(102);}
+  | ident {PtGen.pt(101);}
   | '(' expression ')'
   ;
   

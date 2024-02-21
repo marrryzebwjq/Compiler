@@ -107,7 +107,7 @@ public class PtGen {
 		if (valeur == REFEXT || desc.getUnite().equals("module")) {
 			po.vecteurTrans(valeur);
 			desc.incrNbTansExt();
-		}
+					}
 	}    
     // descripteur associe a un programme objet (compilation separee)
     private static Descripteur desc;
@@ -117,7 +117,7 @@ public class PtGen {
     // -------------------------
     
  // MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
-    public static String trinome="MBassiNoePoint"; 	//TODO 
+    public static String trinome="XxxYyyZzz"; 	//TODO 
     
     private static int tCour; // type de l'expression compilee
     private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
@@ -222,8 +222,139 @@ public class PtGen {
 	
 		switch (numGen) {
 		case 0:
+		{
 			initialisations();
 			break;
+		}
+
+		
+
+		case 113: // exp2 -> 'non'
+		{
+			verifBool();
+
+			po.produire(NON);
+			break;
+		}
+
+		case 112: // exp3 -> '='
+		{
+			po.produire(EG);
+			break;
+		}
+
+		case 111: // exp3 -> '<>'
+		{
+			po.produire(DIFF);
+			break;
+		}
+
+		case 110: // exp3 -> '>'
+		{
+			po.produire(SUP);
+			break;
+		}
+
+		case 109: // exp3 -> '>='
+		{
+			po.produire(SUPEG);
+			break;
+		}
+
+		case 108: // exp3 -> '<'
+		{
+			po.produire(INF);
+			break;
+		}
+
+		case 107: // exp3 -> '<='
+		{
+			po.produire(INFEG);
+			break;
+		}
+
+		case 106: // exp4 -> '+'
+		{
+			verifEnt();
+
+			po.produire(ADD);
+			break;
+		}
+
+		case 105: // exp4 -> '-'
+		{
+			verifEnt();
+
+			po.produire(SOUS);
+			break;
+		}
+
+		case 104: // exp5 -> '*'
+		{
+			verifEnt();
+
+			po.produire(MUL);
+			break;
+		}
+
+		case 103: // exp5 -> 'div'
+		{
+			verifEnt();
+
+			po.produire(DIV);
+			break;
+		}
+
+		case 102: // Primaire -> Empilement d'une valeur écrite
+		{
+			po.produire(EMPILER);
+			po.produire(vCour);
+			break;
+		}
+
+		case 101: // Primaire -> Récupération de ident dans une expression
+		{
+			int index = presentIdent(1);
+			if (index == -1) {
+				UtilLex.messErr("Identifiant : " + index + " inconnu.");
+			}
+
+			EltTabSymb e = tabSymb[index];
+
+			verifEnt();
+
+			switch (e.categorie)
+			{
+				case CONSTANTE: {
+					po.produire(EMPILER);
+					po.produire(e.info);
+					break;
+				}
+
+				case VARGLOBALE: {
+					po.produire(CONTENUG);
+					po.produire(e.info);
+					break;
+				}
+			}
+
+			break;
+		}
+
+		case 100: // Vérification expression est entier
+		{
+			verifEnt();
+			break;
+		}
+
+		case 99:  // Vérification expression est booléen
+		{
+			verifBool();
+			break;
+		}
+
+		case 255: // Fin de compilation
+		{
 
 		case 51: //je suis pas sûre de ce que je fais //TODO regardez pas je vais changer ça
 		{
@@ -254,11 +385,13 @@ public class PtGen {
 		case 255 : 
 			afftabSymb(); // affichage de la table des symboles en fin de compilation
 			break;
+		}
 
-		
-		default:
+		default:  // Point de génération incorrect
+		{
 			System.out.println("Point de generation non prevu dans votre liste");
 			break;
+		}
 
 		}
 	}
