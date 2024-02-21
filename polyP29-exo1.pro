@@ -10,3 +10,4 @@ debut
 	fait;
 	ecrire(som)
 fin
+ 
