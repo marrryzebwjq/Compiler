@@ -210,7 +210,7 @@ public class PtGen {
 		// initialisation du type de l'expression courante
 		tCour = NEUTRE;
 
-		//TODO si necessaire
+		//TODO si necessaire  TEST MARIE PUSH PULL ETC
 
 	} // initialisations
 
