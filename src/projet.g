@@ -67,7 +67,7 @@ specif  : ident  ( 'fixe' '(' type  ( ',' type  )* ')' )?
 consts  : 'const' ( ident  '=' valeur  ptvg  )+ 
   ;
   
-vars  : 'var' ( type ident  ( ','  ident  )* ptvg  )+
+vars  : 'var' {PtGen.pt(1);} ( type ident  ( ','  ident  )* ptvg  )+
   ;
   
 type  : 'ent'  
@@ -125,7 +125,7 @@ inscond : 'cond'  expression  ':' instructions
 boucle  : 'ttq'  expression 'faire' instructions 'fait' 
   ;
   
-lecture: 'lire' '(' ident  ( ',' ident  )* ')' 
+lecture: 'lire' '(' ident { PtGen.pt(51); } ( ',' ident { PtGen.pt(51); } )* ')' 
   ;
   
 ecriture: 'ecrire' '(' expression  ( ',' expression  )* ')'

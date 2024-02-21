@@ -117,11 +117,10 @@ public class PtGen {
     // -------------------------
     
  // MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
-    public static String trinome="XxxYyyZzz"; 	//TODO 
+    public static String trinome="MBassiNoePoint"; 	//TODO 
     
     private static int tCour; // type de l'expression compilee
     private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
-  
    
     // TABLE DES SYMBOLES
     // ------------------
@@ -210,7 +209,7 @@ public class PtGen {
 		// initialisation du type de l'expression courante
 		tCour = NEUTRE;
 
-		//TODO si necessaire  TEST MARIE PUSH PULL ETC
+		//TODO si necessaire
 
 	} // initialisations
 
@@ -225,6 +224,30 @@ public class PtGen {
 		case 0:
 			initialisations();
 			break;
+
+		case 51: //je suis pas sûre de ce que je fais //TODO regardez pas je vais changer ça
+		{
+			Ecriture.ecrireString("contenug");
+			EltTabSymb e = tabSymb[UtilLex.numIdCourant];
+
+			switch (e.categorie)
+			{
+				case CONSTANTE:
+				{
+					po.produire(e.info);
+					break;
+				}
+				case VARGLOBALE:
+				{
+					po.produire(CONTENUG);
+					po.produire(e.info);
+					break;
+				}
+
+				default: break;
+			}
+			
+		}
 		
 		// TODO
 			
