@@ -262,7 +262,11 @@ public class PtGen {
 
 		case 51: // lecture TODO
 		{
-			Ecriture.ecrireString("contenug");
+			/*
+			int index = presentIdent(-1);
+			if (index == -1) {
+				UtilLex.messErr("Identifiant : -1 inconnu.");
+			} */
 			EltTabSymb e = tabSymb[UtilLex.numIdCourant];
 
 			switch (e.categorie)
@@ -286,6 +290,15 @@ public class PtGen {
 
 		case 52: // ecriture
 		{
+			switch (tCour)
+			{
+				case ENT:
+					po.produire(ECRENT);
+					break;
+				case BOOL:
+					po.produire(ECRBOOL);
+					break;
+			}
 			break;
 		}
 		
