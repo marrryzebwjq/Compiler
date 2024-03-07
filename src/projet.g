@@ -70,8 +70,8 @@ consts  : 'const' ( ident  '=' valeur  ptvg  )+
 vars  : 'var' {PtGen.pt(1);} ( type ident  ( ','  ident  )* ptvg  )+
   ;
   
-type  : 'ent'  
-  |     'bool' 
+type  : 'ent' {PtGen.pt(49);}
+  |     'bool' {PtGen.pt(50);}
   ;
   
 decprocs: (decproc ptvg)+
@@ -125,11 +125,10 @@ inscond : 'cond'  expression  ':' instructions
 boucle  : 'ttq'  expression 'faire' instructions 'fait' 
   ;
   
-lecture: 'lire' '(' ident  ( ',' ident  )* ')'
-lecture: 'lire' '(' ident { PtGen.pt(51); } ( ',' ident { PtGen.pt(51); } )* ')' 
+lecture: 'lire' '(' ident {PtGen.pt(51);} ( ',' ident {PtGen.pt(51);} )* ')' 
   ;
   
-ecriture: 'ecrire' '(' expression  ( ',' expression  )* ')'
+ecriture: 'ecrire' '(' expression {PtGen.pt(52);} ( ',' expression {PtGen.pt(52);} )* ')'
    ;
   
 affouappel

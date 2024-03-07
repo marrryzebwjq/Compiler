@@ -246,7 +246,21 @@ public class PtGen {
 			break;
 			
 
-		case 51: //je suis pas sûre de ce que je fais //TODO regardez pas je vais changer ça
+		
+		
+		case 49: // type ent
+		{
+			tCour = ENT;
+			break;
+		}
+
+		case 50: // type bool
+		{
+			tCour = BOOL;
+			break;
+		}
+
+		case 51: // lecture TODO
 		{
 			Ecriture.ecrireString("contenug");
 			EltTabSymb e = tabSymb[UtilLex.numIdCourant];
@@ -268,6 +282,11 @@ public class PtGen {
 				default: break;
 			}
 			
+		}
+
+		case 52: // ecriture
+		{
+			break;
 		}
 		
 		
