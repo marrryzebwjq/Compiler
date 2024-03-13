@@ -123,6 +123,7 @@ public class PtGen {
     private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
    
 	private static int vAdr = 0;
+	private static int nbrAdr = 0;
 
     // TABLE DES SYMBOLES
     // ------------------
@@ -200,6 +201,7 @@ public class PtGen {
 		
 		// Variable pour gérer les adresses des variables.
 		vAdr = 0;
+		nbrAdr = 0;
 		
 		// pile des reprises pour compilation des branchements en avant
 		pileRep = new TPileRep(); 
@@ -233,19 +235,44 @@ public class PtGen {
 		}
 
 		
-		case 1:
+		case 1:		// A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
 			if(presentIdent(1) != 0) {
 				placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
+				nbrAdr++;
+			}
+			else {	// Si la variable a déjà été déclarée précédemment, message d'erreur !
+				UtilLex.messErr("Attention !! variable déjà déclarée précédemment !");
 			}
 			break;
 
-		case 2:
+		case 2:		// Réserver nbrAdr espaces mémoire.
 			po.produire(RESERVER);
-			po.produire(vAdr);
-			vAdr = 0;
+			po.produire(nbrAdr);		// Le nombre de variables lues.
+			nbrAdr = 0;					// On réinitialise pour la prochaine reconnaissance.
 			break;
-			
 
+		case 3:		// Affecter la valeur courante à la variable courante (numIdCourant).
+			int ind = presentIdent(1);
+			if(ind == 0) {
+				UtilLex.messErr("Attention !! La variable que vous essayez de modifier n'existe pas !");
+			}
+			else {
+				if(tabSymb[ind].categorie == VARGLOBALE || tabSymb[ind].categorie == VARLOCALE) {
+					if(tabSymb[ind].type != tCour) {
+						UtilLex.messErr("Les 2 membres gauche et droite de l'affection ne sont pas du même type !");
+					}
+					else {
+						po.produire(EMPILER);
+						po.produire(vCour);
+						po.produire(AFFECTERG);
+						po.produire(tabSymb[ind].info);
+					}
+				}
+				else if(tabSymb[ind].categorie == CONSTANTE) {
+					UtilLex.messErr("Impossible d'affecter une valeur à une constante (qui est non mutable) !");
+				}
+			}
+			break;
 		
 		
 		case 49: // type ent
