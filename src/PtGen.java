@@ -195,8 +195,7 @@ public class PtGen {
     
 
 	/**
-	 *  initialisations A COMPLETER SI BESOIN
-	 *  -------------------------------------
+	 * initialisations
 	 */
 	public static void initialisations() {
 
@@ -234,23 +233,22 @@ public class PtGen {
 	public static void pt(int numGen) {
 	
 		switch (numGen) {
-		case 0:
-		{
-			initialisations();
-			break;
-		}
-
-		
-		case 1:		// A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
-		{
-			if (presentIdent(1) == 0) {
-				placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
-				nbrAdr++;
-			} else {    // Si la variable a déjà été déclarée précédemment, message d'erreur !
-				UtilLex.messErr("Attention !! variable déjà déclarée précédemment !");
+			case 0: {
+				initialisations();
+				break;
 			}
-			break;
-		}
+
+
+			case 1:        // A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
+			{
+				if (presentIdent(1) == 0) {
+					placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
+					nbrAdr++;
+				} else {    // Si la variable a déjà été déclarée précédemment, message d'erreur !
+					UtilLex.messErr("Attention !! variable déjà déclarée précédemment !");
+				}
+				break;
+			}
 
 			case 2:        // Réserver nbrAdr espaces mémoire.
 			{
@@ -325,169 +323,183 @@ public class PtGen {
 
 				int index_lect = presentIdent(1);
 				if (index_lect == 0) {
-					UtilLex.messErr("L'ident n'est pas dans la table des symboles");
+					UtilLex.messErr("L'identifiant n'est pas dans la table des symboles !");
 			} else {
-				EltTabSymb elt = tabSymb[index_lect];
+					EltTabSymb elt = tabSymb[index_lect];
 
-				if(elt.categorie == VARGLOBALE || elt.categorie == VARLOCALE) {
-					tCour = elt.type;
-					po.produire(CONTENUG);
+					if (elt.type == ENT) {
+						po.produire(LIRENT);
+					} else if (elt.type == BOOL) {
+						po.produire(LIREBOOL);
+					} else {
+						UtilLex.messErr("Type de variable non reconnue !");
+					}
+
+					if (elt.categorie == VARGLOBALE) {
+						po.produire(AFFECTERG);
+					} else if (elt.categorie == VARLOCALE) {
+						po.produire(AFFECTERL);
+					} else if (elt.categorie == CONSTANTE) {
+						UtilLex.messErr("L'identifiant est une constante !");
+					} else {
+						UtilLex.messErr("Catégorie non reconnue !");
+					}
+
+					po.produire(elt.info);
 				}
-				po.produire(elt.info);
+				break;
 			}
-			break;
-		}
 
-		case 52: // Ecriture
-		{
-			if(tCour == ENT) {
-				po.produire(ECRENT);
-			} else if (tCour == BOOL) {
-				po.produire(ECRBOOL);
-			}
-			break;
-		}
-		case 53: // Tant que
-		{
-
-			break;
-		}
-
-		case 99:  // Vérification expression est booléen
-		{
-			verifBool();
-			break;
-		}
-
-		case 100: // Vérification expression est entier
-		{
-			verifEnt();
-			break;
-		}
-
-		case 101: // Primaire -> Récupération de ident dans une expression
-		{
-			int index = presentIdent(1);
-            if (index == 0) {
-                UtilLex.messErr("Identifiant : " + UtilLex.chaineIdent(index) + " inconnu.");
-            }
-
-			EltTabSymb e = tabSymb[index];
-
-			switch (e.categorie)
+			case 52: // Ecriture
 			{
-				case CONSTANTE: {
-					tCour = e.type;
-					po.produire(EMPILER);
-					po.produire(e.info);
-					break;
+				if (tCour == ENT) {
+					po.produire(ECRENT);
+				} else if (tCour == BOOL) {
+					po.produire(ECRBOOL);
 				}
-
-				case VARGLOBALE: {
-					tCour = e.type;
-					po.produire(CONTENUG);
-					po.produire(e.info);
-					break;
-				}
+				break;
 			}
 
-			break;
-		}
+			case 53: // Tant que
+			{
 
-		case 102: // Primaire -> Empilement d'une valeur écrite
-		{
-			po.produire(EMPILER);
-			po.produire(vCour);
-			break;
-		}
+				break;
+			}
 
-		case 103: // exp5 -> 'div'
-		{
-			verifEnt();
+			case 99:  // Vérification expression est booléen
+			{
+				verifBool();
+				break;
+			}
 
-			po.produire(DIV);
-			break;
-		}
+			case 100: // Vérification expression est entier
+			{
+				verifEnt();
+				break;
+			}
 
-		case 104: // exp5 -> '*'
-		{
-			verifEnt();
+			case 101: // Primaire -> Récupération de ident dans une expression
+			{
+				int index = presentIdent(1);
+				if (index == 0) {
+					UtilLex.messErr("Identifiant : " + index + " inconnu.");
+				}
 
-			po.produire(MUL);
-			break;
-		}
+				EltTabSymb e = tabSymb[index];
 
-		case 105: // exp4 -> '-'
-		{
-			verifEnt();
+				switch (e.categorie) {
+					case CONSTANTE: {
+						tCour = e.type;
+						po.produire(EMPILER);
+						po.produire(e.info);
+						break;
+					}
 
-			po.produire(SOUS);
-			break;
-		}
+					case VARGLOBALE: {
+						tCour = e.type;
+						po.produire(CONTENUG);
+						po.produire(e.info);
+						break;
+					}
+				}
 
-		case 106: // exp4 -> '+'
-		{
-			verifEnt();
+				break;
+			}
 
-			po.produire(ADD);
-			break;
-		}
+			case 102: // Primaire -> Empilement d'une valeur écrite
+			{
+				po.produire(EMPILER);
+				po.produire(vCour);
+				break;
+			}
 
-		case 107: // exp3 -> '<='
-		{
-			verifEnt();
+			case 103: // exp5 -> 'div'
+			{
+				verifEnt();
 
-			po.produire(INFEG);
-			break;
-		}
+				po.produire(DIV);
+				break;
+			}
 
-		case 108: // exp3 -> '<'
-		{
-			verifEnt();
+			case 104: // exp5 -> '*'
+			{
+				verifEnt();
 
-			po.produire(INF);
-			break;
-		}
+				po.produire(MUL);
+				break;
+			}
 
-		case 109: // exp3 -> '>='
-		{
-			verifEnt();
+			case 105: // exp4 -> '-'
+			{
+				verifEnt();
 
-			po.produire(SUPEG);
-			break;
-		}
+				po.produire(SOUS);
+				break;
+			}
 
-		case 110: // exp3 -> '>'
-		{
-			verifEnt();
+			case 106: // exp4 -> '+'
+			{
+				verifEnt();
 
-			po.produire(SUP);
-			break;
-		}
+				po.produire(ADD);
+				break;
+			}
 
-		case 111: // exp3 -> '<>'
-		{
-			verifEnt();
+			case 107: // exp3 -> '<='
+			{
+				verifEnt();
 
-			po.produire(DIFF);
-			break;
-		}
+				po.produire(INFEG);
+				break;
+			}
 
-		case 112: // exp3 -> '='
-		{
-			verifEnt();
+			case 108: // exp3 -> '<'
+			{
+				verifEnt();
 
-			po.produire(EG);
-			break;
-		}
+				po.produire(INF);
+				break;
+			}
 
-		case 113: // exp2 -> 'non'
-		{
-			verifBool();
+			case 109: // exp3 -> '>='
+			{
+				verifEnt();
 
-			po.produire(NON);
-			break;
-		}
+				po.produire(SUPEG);
+				break;
+			}
+
+			case 110: // exp3 -> '>'
+			{
+				verifEnt();
+
+				po.produire(SUP);
+				break;
+			}
+
+			case 111: // exp3 -> '<>'
+			{
+				verifEnt();
+
+				po.produire(DIFF);
+				break;
+			}
+
+			case 112: // exp3 -> '='
+			{
+				verifEnt();
+
+				po.produire(EG);
+				break;
+			}
+
+			case 113: // exp2 -> 'non'
+			{
+				verifBool();
+
+				po.produire(NON);
+				break;
+			}
 
 			case 114: // exp2 -> 'et'
 			{
@@ -542,7 +554,7 @@ public class PtGen {
 			{
 				System.out.println("Point de generation non prevu dans votre liste");
 				break;
-		}
+			}
 
 		}
 	}
