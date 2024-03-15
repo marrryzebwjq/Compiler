@@ -117,7 +117,7 @@ public class PtGen {
     // -------------------------
     
  // MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
-    public static String trinome="MBassiNoePoint"; 	//TODO 
+    public static String trinome="MBassiNoePoint";
     
     private static int tCour; // type de l'expression compilee
     private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
@@ -216,8 +216,6 @@ public class PtGen {
 		// initialisation du type de l'expression courante
 		tCour = NEUTRE;
 
-		//TODO si necessaire
-
 	} // initialisations
 
 	/**
@@ -314,86 +312,15 @@ public class PtGen {
 			break;
 		}
 
-		case 113: // exp2 -> 'non'
+		case 99:  // Vérification expression est booléen
 		{
 			verifBool();
-
-			po.produire(NON);
 			break;
 		}
 
-		case 112: // exp3 -> '='
-		{
-			po.produire(EG);
-			break;
-		}
-
-		case 111: // exp3 -> '<>'
-		{
-			po.produire(DIFF);
-			break;
-		}
-
-		case 110: // exp3 -> '>'
-		{
-			po.produire(SUP);
-			break;
-		}
-
-		case 109: // exp3 -> '>='
-		{
-			po.produire(SUPEG);
-			break;
-		}
-
-		case 108: // exp3 -> '<'
-		{
-			po.produire(INF);
-			break;
-		}
-
-		case 107: // exp3 -> '<='
-		{
-			po.produire(INFEG);
-			break;
-		}
-
-		case 106: // exp4 -> '+'
+		case 100: // Vérification expression est entier
 		{
 			verifEnt();
-
-			po.produire(ADD);
-			break;
-		}
-
-		case 105: // exp4 -> '-'
-		{
-			verifEnt();
-
-			po.produire(SOUS);
-			break;
-		}
-
-		case 104: // exp5 -> '*'
-		{
-			verifEnt();
-
-			po.produire(MUL);
-			break;
-		}
-
-		case 103: // exp5 -> 'div'
-		{
-			verifEnt();
-
-			po.produire(DIV);
-			break;
-		}
-
-		case 102: // Primaire -> Empilement d'une valeur écrite
-		{
-			po.produire(EMPILER);
-			po.produire(vCour);
 			break;
 		}
 
@@ -406,17 +333,17 @@ public class PtGen {
 
 			EltTabSymb e = tabSymb[index];
 
-			verifEnt();
-
 			switch (e.categorie)
 			{
 				case CONSTANTE: {
+					tCour = e.type;
 					po.produire(EMPILER);
 					po.produire(e.info);
 					break;
 				}
 
 				case VARGLOBALE: {
+					tCour = e.type;
 					po.produire(CONTENUG);
 					po.produire(e.info);
 					break;
@@ -426,19 +353,116 @@ public class PtGen {
 			break;
 		}
 
-		case 100: // Vérification expression est entier
+		case 102: // Primaire -> Empilement d'une valeur écrite
+		{
+			po.produire(EMPILER);
+			po.produire(vCour);
+			break;
+		}
+
+		case 103: // exp5 -> 'div'
 		{
 			verifEnt();
+
+			po.produire(DIV);
 			break;
 		}
 
-		case 99:  // Vérification expression est booléen
+		case 104: // exp5 -> '*'
+		{
+			verifEnt();
+
+			po.produire(MUL);
+			break;
+		}
+
+		case 105: // exp4 -> '-'
+		{
+			verifEnt();
+
+			po.produire(SOUS);
+			break;
+		}
+
+		case 106: // exp4 -> '+'
+		{
+			verifEnt();
+
+			po.produire(ADD);
+			break;
+		}
+
+		case 107: // exp3 -> '<='
+		{
+			verifEnt();
+
+			po.produire(INFEG);
+			break;
+		}
+
+		case 108: // exp3 -> '<'
+		{
+			verifEnt();
+
+			po.produire(INF);
+			break;
+		}
+
+		case 109: // exp3 -> '>='
+		{
+			verifEnt();
+
+			po.produire(SUPEG);
+			break;
+		}
+
+		case 110: // exp3 -> '>'
+		{
+			verifEnt();
+
+			po.produire(SUP);
+			break;
+		}
+
+		case 111: // exp3 -> '<>'
+		{
+			verifEnt();
+
+			po.produire(DIFF);
+			break;
+		}
+
+		case 112: // exp3 -> '='
+		{
+			verifEnt();
+
+			po.produire(EG);
+			break;
+		}
+
+		case 113: // exp2 -> 'non'
 		{
 			verifBool();
+
+			po.produire(NON);
 			break;
 		}
 
-		// TODO
+		case 114: // exp2 -> 'et'
+		{
+			verifBool();
+
+			po.produire(ET);
+			break;
+		}
+
+		case 115: // exp2 -> 'ou'
+		{
+			verifBool();
+
+			po.produire(OU);
+			break;
+		}
 			
 		case 255 : 
 		{

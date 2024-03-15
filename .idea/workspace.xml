@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PtGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PtGen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/projet.g" beforeDir="false" afterPath="$PROJECT_DIR$/src/projet.g" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +36,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1710513681076</updated>
-      <workItem from="1710513683014" duration="448000" />
+      <workItem from="1710513683014" duration="1721000" />
     </task>
     <task id="LOCAL-00001" summary="Commit du changement github à gitlab">
       <created>1710514109382</created>
@@ -43,7 +45,14 @@
       <option name="project" value="LOCAL" />
       <updated>1710514109382</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Commit merge général">
+      <created>1710514147866</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1710514147866</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -51,6 +60,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Commit du changement github à gitlab" />
-    <option name="LAST_COMMIT_MESSAGE" value="Commit du changement github à gitlab" />
+    <MESSAGE value="Commit merge général" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit merge général" />
   </component>
 </project>
