@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 projet.g 2024-03-13 22:57:41
+// $ANTLR 3.5.2 projet.g 2024-03-13 22:09:11
            
 import java.io.IOException;
 import java.io.DataInputStream;
@@ -670,7 +670,7 @@ public class projetParser extends Parser {
 							// projet.g:70:45: ',' ident
 							{
 							match(input,14,FOLLOW_14_in_vars374); 
-							pushFollow(FOLLOW_ident_in_vars377);
+							pushFollow(FOLLOW_ident_in_vars376);
 							ident();
 							state._fsp--;
 
@@ -683,7 +683,7 @@ public class projetParser extends Parser {
 						}
 					}
 
-					pushFollow(FOLLOW_ptvg_in_vars384);
+					pushFollow(FOLLOW_ptvg_in_vars383);
 					ptvg();
 					state._fsp--;
 
@@ -2591,8 +2591,8 @@ public class projetParser extends Parser {
 	public static final BitSet FOLLOW_type_in_vars366 = new BitSet(new long[]{0x0000000000000020L});
 	public static final BitSet FOLLOW_ident_in_vars368 = new BitSet(new long[]{0x0000000408044000L});
 	public static final BitSet FOLLOW_14_in_vars374 = new BitSet(new long[]{0x0000000000000020L});
-	public static final BitSet FOLLOW_ident_in_vars377 = new BitSet(new long[]{0x0000000408044000L});
-	public static final BitSet FOLLOW_ptvg_in_vars384 = new BitSet(new long[]{0x0000000408000002L});
+	public static final BitSet FOLLOW_ident_in_vars376 = new BitSet(new long[]{0x0000000408044000L});
+	public static final BitSet FOLLOW_ptvg_in_vars383 = new BitSet(new long[]{0x0000000408000002L});
 	public static final BitSet FOLLOW_34_in_type403 = new BitSet(new long[]{0x0000000000000002L});
 	public static final BitSet FOLLOW_27_in_type415 = new BitSet(new long[]{0x0000000000000002L});
 	public static final BitSet FOLLOW_decproc_in_decprocs430 = new BitSet(new long[]{0x0001000000040000L});
