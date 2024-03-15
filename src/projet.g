@@ -64,7 +64,7 @@ specif  : ident  ( 'fixe' '(' type  ( ',' type  )* ')' )?
                  ( 'mod'  '(' type  ( ',' type  )* ')' )? 
   ;
   
-consts  : 'const' ( ident  '=' valeur  ptvg  )+ 
+consts  : 'const' ( ident '=' valeur {PtGen.pt(4);} ptvg )+
   ;
   
 vars  : 'var' ( type ident {PtGen.pt(1);} ( ','  ident {PtGen.pt(1);} )* ptvg {PtGen.pt(2);} )+
@@ -132,7 +132,7 @@ ecriture: 'ecrire' '(' expression {PtGen.pt(52);} ( ',' expression {PtGen.pt(52)
    ;
   
 affouappel
-  : ident  (    ':=' expression {PtGen.pt(3);}
+  : ident ( {PtGen.pt(3); }   ':=' expression {PtGen.pt(5);}
             |   (effixes (effmods)?)?  
            )
   ;
@@ -143,14 +143,14 @@ effixes : '(' (expression  (',' expression  )*)? ')'
 effmods :'(' (ident  (',' ident  )*)? ')'
   ; 
   
-expression: (exp1) {PtGen.pt(99);} ('ou'  exp1 {PtGen.pt(115);} )*
+expression: (exp1) ({PtGen.pt(99);} 'ou'  exp1 {PtGen.pt(115);} )*
   ;
   
-exp1  : exp2 {PtGen.pt(99);} ('et' exp2 {PtGen.pt(114);} )*
+exp1  : exp2 ({PtGen.pt(99);} 'et' exp2 {PtGen.pt(114);} )*
   ;
   
 exp2  : 'non' exp2 {PtGen.pt(113); PtGen.pt(50);}
-  | exp3 {PtGen.pt(113); PtGen.pt(50);}
+  | exp3
   ;
   
 exp3  : exp4 
@@ -180,11 +180,11 @@ primaire: valeur {PtGen.pt(102);}
   | '(' expression ')'
   ;
   
-valeur  : nbentier 
-  | '+' nbentier {PtGen.pt(49);}
-  | '-' nbentier {PtGen.pt(49);}
-  | 'vrai' {PtGen.pt(50);}
-  | 'faux' {PtGen.pt(50);}
+valeur  : nbentier {PtGen.pt(116);}
+  | '+' nbentier {PtGen.pt(116);}
+  | '-' nbentier {PtGen.pt(117);}
+  | 'vrai' {PtGen.pt(118);}
+  | 'faux' {PtGen.pt(119);}
   ;
 
 // partie lexicale  : cette partie ne doit pas etre modifiee  //

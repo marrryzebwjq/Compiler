@@ -20,6 +20,9 @@
  *********************************************************************************/
 
 
+import org.antlr.runtime.Lexer;
+
+import javax.rmi.CORBA.Util;
 import java.io.*;
 
 /**
@@ -102,41 +105,43 @@ public class PtGen {
      * + incrementation attribut nbTransExt du descripteur
      *  NB: effectue uniquement si c'est une reference externe ou si on compile un module
      * @param valeur : TRANSDON, TRANSCODE ou REFEXT
-     */
-    private static void modifVecteurTrans(int valeur) {
+	 */
+	private static void modifVecteurTrans(int valeur) {
 		if (valeur == REFEXT || desc.getUnite().equals("module")) {
 			po.vecteurTrans(valeur);
 			desc.incrNbTansExt();
-					}
-	}    
-    // descripteur associe a un programme objet (compilation separee)
-    private static Descripteur desc;
+		}
+	}
 
-     
-    // autres variables fournies
-    // -------------------------
-    
- // MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
-    public static String trinome="MBassiNoePoint";
-    
-    private static int tCour; // type de l'expression compilee
-    private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
-   
+	// descripteur associe a un programme objet (compilation separee)
+	private static Descripteur desc;
+
+
+	// autres variables fournies
+	// -------------------------
+
+	// MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
+	public static String trinome = "MBassiNoePoint";
+
+	private static int tCour; // type de l'expression compilee
+	private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
+
+	private static int vAff = 0;
 	private static int vAdr = 0;
 	private static int nbrAdr = 0;
 
-    // TABLE DES SYMBOLES
-    // ------------------
-    //
-    private static EltTabSymb[] tabSymb = new EltTabSymb[MAXSYMB + 1];
-    
-    // it = indice de remplissage de tabSymb
-    // bc = bloc courant (=1 si le bloc courant est le programme principal)
+	// TABLE DES SYMBOLES
+	// ------------------
+	//
+	private static EltTabSymb[] tabSymb = new EltTabSymb[MAXSYMB + 1];
+
+	// it = indice de remplissage de tabSymb
+	// bc = bloc courant (=1 si le bloc courant est le programme principal)
 	private static int it, bc;
-	
-	/** 
+
+	/**
 	 * utilitaire de recherche de l'ident courant (ayant pour code UtilLex.numIdCourant) dans tabSymb
-	 * 
+	 *
 	 * @param borneInf : recherche de l'indice it vers borneInf (=1 si recherche dans tout tabSymb)
 	 * @return : indice de l'ident courant (de code UtilLex.numIdCourant) dans tabSymb (O si absence)
 	 */
@@ -194,17 +199,20 @@ public class PtGen {
 	 *  -------------------------------------
 	 */
 	public static void initialisations() {
-	
+
 		// indices de gestion de la table des symboles
 		it = 0;
 		bc = 1;
-		
+
+		// Index pour l'affectation
+		vAff = 0;
+
 		// Variable pour gérer les adresses des variables.
 		vAdr = 0;
 		nbrAdr = 0;
-		
+
 		// pile des reprises pour compilation des branchements en avant
-		pileRep = new TPileRep(); 
+		pileRep = new TPileRep();
 		// programme objet = code Mapile de l'unite en cours de compilation
 		po = new ProgObjet();
 		// COMPILATION SEPAREE: desripteur de l'unite en cours de compilation
@@ -234,66 +242,95 @@ public class PtGen {
 
 		
 		case 1:		// A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
+		{
 			if (presentIdent(1) == 0) {
-                placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
-                nbrAdr++;
-            } else {    // Si la variable a déjà été déclarée précédemment, message d'erreur !
-                UtilLex.messErr("Attention !! variable déjà déclarée précédemment !");
-            }
-			break;
-
-		case 2:		// Réserver nbrAdr espaces mémoire.
-			po.produire(RESERVER);
-			po.produire(nbrAdr);		// Le nombre de variables lues.
-			nbrAdr = 0;					// On réinitialise pour la prochaine reconnaissance.
-			break;
-
-		case 3:		// Affecter la valeur courante à la variable courante (numIdCourant).
-			int ind = presentIdent(1);
-			if(ind == 0) {
-				UtilLex.messErr("Attention !! La variable que vous essayez de modifier n'existe pas !");
+				placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
+				nbrAdr++;
+			} else {    // Si la variable a déjà été déclarée précédemment, message d'erreur !
+				UtilLex.messErr("Attention !! variable déjà déclarée précédemment !");
 			}
-			else {
-				if(tabSymb[ind].categorie == VARGLOBALE || tabSymb[ind].categorie == VARLOCALE) {
-					if(tabSymb[ind].type != tCour) {
+			break;
+		}
+
+			case 2:        // Réserver nbrAdr espaces mémoire.
+			{
+				po.produire(RESERVER);
+				po.produire(nbrAdr);        // Le nombre de variables lues.
+				nbrAdr = 0;                    // On réinitialise pour la prochaine reconnaissance.
+				break;
+			}
+
+			case 3:    // Vérification si variable globale ou locale
+			{
+				int ind = presentIdent(1);
+				if (ind == 0) {
+					UtilLex.messErr("Attention !! La variable que vous essayez d'affecter n'éxiste pas !");
+				} else {
+					if (tabSymb[ind].categorie != VARGLOBALE && tabSymb[ind].categorie != VARLOCALE) {
+						UtilLex.messErr("Attention !! L'identifiant n'est pas une variable !");
+					}
+				}
+				vAff = ind;
+				break;
+			}
+
+			case 4: // Création d'une constante
+			{
+				int ind = presentIdent(1);
+				if (ind == 0) {
+					placeIdent(UtilLex.numIdCourant, CONSTANTE, tCour, vCour);
+				} else {
+					UtilLex.messErr("Attention !! La constante que vous essayez de créer existe déjà !");
+				}
+				break;
+			}
+
+			case 5: // Affectation
+			{
+				if (vAff == 0) {
+					UtilLex.messErr("Attention !! La variable que vous essayez de réserver n'existe pas !");
+				} else {
+					if (tabSymb[vAff].type != tCour) {
 						UtilLex.messErr("Les 2 membres gauche et droite de l'affection ne sont pas du même type !");
 					}
-					else {
-						po.produire(EMPILER);
-						po.produire(vCour);
+
+					if (tabSymb[vAff].categorie == VARGLOBALE) {
 						po.produire(AFFECTERG);
-						po.produire(tabSymb[ind].info);
+						po.produire(vAff);
+					} else if (tabSymb[vAff].categorie == CONSTANTE) {
+						po.produire(AFFECTERL);
+						po.produire(vAff);
+					} else {
+						UtilLex.messErr("Catégorie non prévue !");
 					}
 				}
-				else if(tabSymb[ind].categorie == CONSTANTE) {
-					UtilLex.messErr("Impossible d'affecter une valeur à une constante (qui est non mutable) !");
-				}
+				vAff = 0;
+				break;
 			}
-			break;
-		
 
-		case 49: // Type entier
-		{
-			tCour = ENT;
-			break;
-		}
+			case 49: // Type entier
+			{
+				tCour = ENT;
+				break;
+			}
 
-		case 50: // Type booléen
-		{
-			tCour = BOOL;
-			break;
-		}
+			case 50: // Type booléen
+			{
+				tCour = BOOL;
+				break;
+			}
 
-		case 51: // Lecture
-		{
-			
-			int index_lect = presentIdent(1);
-			if (index_lect == 0) {
-				UtilLex.messErr("L'ident n'est pas dans la table des symboles");
+			case 51: // Lecture
+			{
+
+				int index_lect = presentIdent(1);
+				if (index_lect == 0) {
+					UtilLex.messErr("L'ident n'est pas dans la table des symboles");
 			} else {
 				EltTabSymb elt = tabSymb[index_lect];
 
 				if(elt.categorie == VARGLOBALE || elt.categorie == VARLOCALE) {
+					tCour = elt.type;
 					po.produire(CONTENUG);
 				}
 				po.produire(elt.info);
@@ -312,6 +349,8 @@ public class PtGen {
 		}
 		case 53: // Tant que
 		{
+
+			break;
 		}
 
 		case 99:  // Vérification expression est booléen
@@ -450,32 +489,59 @@ public class PtGen {
 			break;
 		}
 
-		case 114: // exp2 -> 'et'
-		{
-			verifBool();
+			case 114: // exp2 -> 'et'
+			{
+				verifBool();
 
-			po.produire(ET);
-			break;
-		}
+				po.produire(ET);
+				break;
+			}
 
-		case 115: // exp2 -> 'ou'
-		{
-			verifBool();
+			case 115: // exp2 -> 'ou'
+			{
+				verifBool();
 
-			po.produire(OU);
-			break;
-		}
-			
-		case 255 : 
-		{
-			afftabSymb(); // affichage de la table des symboles en fin de compilation
-			break;
-		}
+				po.produire(OU);
+				break;
+			}
 
-		default:  // Point de génération incorrect
-		{
-			System.out.println("Point de generation non prevu dans votre liste");
-			break;
+			case 116: // Affectation de la valeur courante
+			{
+				tCour = ENT;
+				vCour = UtilLex.valEnt;
+				break;
+			}
+
+			case 117: // Affectation de la valeur courante négative
+			{
+				tCour = ENT;
+				vCour = -UtilLex.valEnt;
+				break;
+			}
+
+			case 118: // Affectation de la valeur booléenne vraie
+			{
+				tCour = BOOL;
+				vCour = 1;
+				break;
+			}
+
+			case 119: // Affectation de la valeur booléenne fausse
+			{
+				tCour = BOOL;
+				vCour = 0;
+				break;
+			}
+
+			case 255: {
+				afftabSymb(); // affichage de la table des symboles en fin de compilation
+				break;
+			}
+
+			default:  // Point de génération incorrect
+			{
+				System.out.println("Point de generation non prevu dans votre liste");
+				break;
 		}
 
 		}
