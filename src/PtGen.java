@@ -22,7 +22,6 @@
 
 import org.antlr.runtime.Lexer;
 
-import javax.rmi.CORBA.Util;
 import java.io.*;
 
 /**
@@ -360,9 +359,51 @@ public class PtGen {
 				break;
 			}
 
-			case 53: // Tant que
+			case 53:  // Tant que
 			{
 
+				break;
+			}
+
+			case 95:  // Fin du chaînage de cond
+			{
+				int indBincond = pileRep.depiler();
+				while (indBincond != 0) {
+					int nextInd = po.getElt(indBincond);
+					po.modifier(indBincond, po.getIpo() + 1);
+					indBincond = nextInd;
+				}
+				break;
+			}
+
+			case 96:  // Chaînage fin de cond
+			{
+				po.produire(BINCOND);
+				po.produire(0);
+				int indBsifaux = pileRep.depiler();
+				po.modifier(indBsifaux, po.getIpo() + 1);
+				int indBincond = pileRep.depiler();
+				po.modifier(po.getIpo(), indBincond);
+				pileRep.empiler(po.getIpo());
+				break;
+			}
+
+			case 97:  // Première fin de cond
+			{
+				po.produire(BINCOND);
+				po.produire(0);
+				int indBsifaux = pileRep.depiler();
+				po.modifier(indBsifaux, po.getIpo() + 1);
+				pileRep.empiler(po.getIpo());
+				break;
+			}
+
+			case 98:  // Premier début de cond
+			{
+				verifBool();
+				po.produire(BSIFAUX);
+				po.produire(0);
+				pileRep.empiler(po.getIpo()); // Empilement de l'indice de l'argument de bsifaux et chaînage jusqu'au prochain cond
 				break;
 			}
 
@@ -545,8 +586,16 @@ public class PtGen {
 				break;
 			}
 
+			case 120: // Arrêt
+			{
+				po.produire(ARRET);
+				break;
+			}
+
 			case 255: {
-				afftabSymb(); // affichage de la table des symboles en fin de compilation
+				afftabSymb();  // Affichage de la table des symboles en fin de compilation
+				po.constGen(); // Ecriture du fichier de mnémoniques
+				po.constObj(); // Ecriture du fichier objet
 				break;
 			}
 

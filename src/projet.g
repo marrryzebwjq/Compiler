@@ -84,7 +84,7 @@ ptvg  : ';'
   | 
   ;
   
-corps : 'debut' instructions 'fin'
+corps : 'debut' instructions 'fin' {PtGen.pt(120);}
   ;
   
 parfixe: 'fixe' '(' pf ( ';' pf)* ')'
@@ -116,10 +116,10 @@ instruction
 inssi : 'si' expression {PtGen.pt(4);} 'alors' instructions ('sinon'  instructions)? 'fsi' 
   ;
   
-inscond : 'cond'  expression  ':' instructions 
-          (','  expression  ':' instructions )* 
-          ('aut'  instructions |  ) 
-          'fcond' 
+inscond : 'cond' expression {PtGen.pt(98)} ':' instructions {PtGen.pt(97);}
+          (','  expression {PtGen.pt(98)} ':' instructions {PtGen.pt(96);})*
+          ('aut' instructions |  )
+          'fcond' {PtGen.pt(95);}
   ;
   
 boucle  : 'ttq' {PtGen.pt(53);} expression 'faire' instructions 'fait' 
