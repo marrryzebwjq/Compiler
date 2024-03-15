@@ -232,13 +232,14 @@ public class PtGen {
 	public static void pt(int numGen) {
 	
 		switch (numGen) {
-			case 0: {
+			case 0: // Initialisation
+			{
 				initialisations();
 				break;
 			}
 
 
-			case 1:        // A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
+			case 1: // A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
 			{
 				if (presentIdent(1) == 0) {
 					placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
@@ -249,7 +250,7 @@ public class PtGen {
 				break;
 			}
 
-			case 2:        // Réserver nbrAdr espaces mémoire.
+			case 2: // Réserver nbrAdr espaces mémoire.
 			{
 				po.produire(RESERVER);
 				po.produire(nbrAdr);        // Le nombre de variables lues.
@@ -257,7 +258,7 @@ public class PtGen {
 				break;
 			}
 
-			case 3:    // Vérification si variable globale ou locale
+			case 3: // Vérification si variable globale ou locale
 			{
 				int ind = presentIdent(1);
 				if (ind == 0) {
@@ -359,51 +360,69 @@ public class PtGen {
 				break;
 			}
 
-			case 53:  // Tant que
+			case 92:  // Début branchement condition du while
 			{
-
+				pileRep.empiler(po.getIpo() + 1);
 				break;
 			}
 
-			case 95:  // Fin du chaînage de cond
+			case 93:  // Fin si
 			{
-				int indBincond = pileRep.depiler();
-				while (indBincond != 0) {
-					int nextInd = po.getElt(indBincond);
-					po.modifier(indBincond, po.getIpo() + 1);
-					indBincond = nextInd;
+				int IpoBinouBsi = pileRep.depiler();
+				po.modifier(IpoBinouBsi, po.getIpo() + 1);
+				break;
+			}
+
+			case 94:  // Fin tant que
+			{
+				po.produire(BINCOND);
+				po.produire(0);
+				int ipoBsifaux = pileRep.depiler();
+				po.modifier(ipoBsifaux, po.getIpo() + 1);
+				int ipoDebutWhile = pileRep.depiler();
+				po.modifier(po.getIpo(), ipoDebutWhile);
+				break;
+			}
+
+			case 95:  // Fin du chaînage
+			{
+				int ipoBincond = pileRep.depiler();
+				while (ipoBincond != 0) { // Résolution des bincond en prenant po[bincondi] = ipo + 1
+					int nextInd = po.getElt(ipoBincond);
+					po.modifier(ipoBincond, po.getIpo() + 1);
+					ipoBincond = nextInd;
 				}
 				break;
 			}
 
-			case 96:  // Chaînage fin de cond
+			case 96:  // Chaînage
 			{
 				po.produire(BINCOND);
 				po.produire(0);
-				int indBsifaux = pileRep.depiler();
-				po.modifier(indBsifaux, po.getIpo() + 1);
-				int indBincond = pileRep.depiler();
-				po.modifier(po.getIpo(), indBincond);
+				int ipoBsifaux = pileRep.depiler(); // Dépilement du bsifaux pour le modifier en po[bsifaux] = ipo + 1
+				po.modifier(ipoBsifaux, po.getIpo() + 1);
+				int ipoBincond = pileRep.depiler(); // Dépilement du bincond pour le chaînage en po[bincond2] = bincond1
+				po.modifier(po.getIpo(), ipoBincond);
 				pileRep.empiler(po.getIpo());
 				break;
 			}
 
-			case 97:  // Première fin de cond
+			case 97:  // Premier chaînage
 			{
 				po.produire(BINCOND);
 				po.produire(0);
-				int indBsifaux = pileRep.depiler();
-				po.modifier(indBsifaux, po.getIpo() + 1);
-				pileRep.empiler(po.getIpo());
+				int ipoBsifaux = pileRep.depiler(); // Dépilement du bsifaux pour le modifier en po[bsifaux] = ipo + 1
+				po.modifier(ipoBsifaux, po.getIpo() + 1);
+				pileRep.empiler(po.getIpo());        // Empilement actuel de l'argument de bincond
 				break;
 			}
 
-			case 98:  // Premier début de cond
+			case 98:  // Début d'un si
 			{
 				verifBool();
 				po.produire(BSIFAUX);
 				po.produire(0);
-				pileRep.empiler(po.getIpo()); // Empilement de l'indice de l'argument de bsifaux et chaînage jusqu'au prochain cond
+				pileRep.empiler(po.getIpo()); // Empilement de l'indice de l'argument de bsifaux
 				break;
 			}
 
