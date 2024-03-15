@@ -310,6 +310,9 @@ public class PtGen {
 			}
 			break;
 		}
+		case 53: // Tant que
+		{
+		}
 
 		case 99:  // Vérification expression est booléen
 		{
