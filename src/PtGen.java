@@ -369,7 +369,7 @@ public class PtGen {
 		{
 			int index = presentIdent(1);
             if (index == 0) {
-                UtilLex.messErr("Identifiant : " + index + " inconnu.");
+                UtilLex.messErr("Identifiant : " + UtilLex.chaineIdent(index) + " inconnu.");
             }
 
 			EltTabSymb e = tabSymb[index];
