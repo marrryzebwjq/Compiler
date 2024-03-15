@@ -234,13 +234,12 @@ public class PtGen {
 
 		
 		case 1:		// A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
-			if(presentIdent(1) != 0) {
-				placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
-				nbrAdr++;
-			}
-			else {	// Si la variable a déjà été déclarée précédemment, message d'erreur !
-				UtilLex.messErr("Attention !! variable déjà déclarée précédemment !");
-			}
+			if (presentIdent(1) == 0) {
+                placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
+                nbrAdr++;
+            } else {    // Si la variable a déjà été déclarée précédemment, message d'erreur !
+                UtilLex.messErr("Attention !! variable déjà déclarée précédemment !");
+            }
 			break;
 
 		case 2:		// Réserver nbrAdr espaces mémoire.
@@ -311,6 +310,9 @@ public class PtGen {
 			}
 			break;
 		}
+		case 53: // Tant que
+		{
+		}
 
 		case 99:  // Vérification expression est booléen
 		{
@@ -327,9 +329,9 @@ public class PtGen {
 		case 101: // Primaire -> Récupération de ident dans une expression
 		{
 			int index = presentIdent(1);
-			if (index == -1) {
-				UtilLex.messErr("Identifiant : " + index + " inconnu.");
-			}
+            if (index == 0) {
+                UtilLex.messErr("Identifiant : " + index + " inconnu.");
+            }
 
 			EltTabSymb e = tabSymb[index];
 
