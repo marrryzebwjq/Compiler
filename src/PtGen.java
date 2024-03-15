@@ -275,13 +275,13 @@ public class PtGen {
 			break;
 		
 		
-		case 49: // type ent
+		case 49: // Changement type courant => Type entier
 		{
 			tCour = ENT;
 			break;
 		}
 
-		case 50: // type bool
+		case 50: // Changement type courant => Type booléen
 		{
 			tCour = BOOL;
 			break;
@@ -328,8 +328,8 @@ public class PtGen {
 			}
 			break;
 		}
-		
-		
+
+
 
 		case 113: // exp2 -> 'non'
 		{
@@ -454,12 +454,10 @@ public class PtGen {
 			verifBool();
 			break;
 		}
-
-		// TODO
 			
 		case 255 : 
 		{
-			afftabSymb(); // affichage de la table des symboles en fin de compilation
+			afftabSymb(); // Affichage de la table des symboles en fin de compilation
 			break;
 		}
 
