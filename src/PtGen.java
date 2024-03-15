@@ -325,16 +325,30 @@ public class PtGen {
 
 				int index_lect = presentIdent(1);
 				if (index_lect == 0) {
-					UtilLex.messErr("L'ident n'est pas dans la table des symboles");
+					UtilLex.messErr("L'identifiant n'est pas dans la table des symboles !");
 			} else {
-				EltTabSymb elt = tabSymb[index_lect];
+					EltTabSymb elt = tabSymb[index_lect];
 
-				if(elt.categorie == VARGLOBALE || elt.categorie == VARLOCALE) {
-					tCour = elt.type;
-					po.produire(CONTENUG);
+					if (elt.type == ENT) {
+						po.produire(LIRENT);
+					} else if (elt.type == BOOL) {
+						po.produire(LIREBOOL);
+					} else {
+						UtilLex.messErr("Type de variable non reconnue !");
+					}
+
+					if (elt.categorie == VARGLOBALE) {
+						po.produire(AFFECTERG);
+					} else if (elt.categorie == VARLOCALE) {
+						po.produire(AFFECTERL);
+					} else if (elt.categorie == CONSTANTE) {
+						UtilLex.messErr("L'identifiant est une constante !");
+					} else {
+						UtilLex.messErr("Catégorie non reconnue !");
+					}
+
+					po.produire(elt.info);
 				}
-				po.produire(elt.info);
-			}
 			break;
 		}
 

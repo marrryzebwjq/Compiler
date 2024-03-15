@@ -4,9 +4,6 @@
     <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PtGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PtGen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/projet.g" beforeDir="false" afterPath="$PROJECT_DIR$/src/projet.g" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/projetLexer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/projetParser.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +84,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1710513681076</updated>
-      <workItem from="1710513683014" duration="7793000" />
+      <workItem from="1710513683014" duration="8434000" />
     </task>
     <task id="LOCAL-00001" summary="Commit du changement github à gitlab">
       <created>1710514109382</created>
@@ -117,7 +114,14 @@
       <option name="project" value="LOCAL" />
       <updated>1710516986040</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Correction affectation, création de constante, et expressions.">
+      <created>1710521583233</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1710521583233</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -128,7 +132,8 @@
     <MESSAGE value="Commit merge général" />
     <MESSAGE value="Commit expressions depuis version github" />
     <MESSAGE value="Correction réservation des variables (!= -&gt; ==)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Correction réservation des variables (!= -&gt; ==)" />
+    <MESSAGE value="Correction affectation, création de constante, et expressions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Correction affectation, création de constante, et expressions." />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
