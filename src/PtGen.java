@@ -313,6 +313,9 @@ public class PtGen {
 			}
 			break;
 		}
+		case 53: // Tant que
+		{
+		}
 			
 			
 	
