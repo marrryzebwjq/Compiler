@@ -117,7 +117,7 @@ public class PtGen {
     // -------------------------
     
  // MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
-    public static String trinome="MBassiNoePoint";
+    public static String trinome="MBassiNoePoint"; 	//TODO 
     
     private static int tCour; // type de l'expression compilee
     private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
@@ -252,64 +252,79 @@ public class PtGen {
 			break;
 
 		case 3:		// Affecter la valeur courante à la variable courante (numIdCourant).
-			int index = presentIdent(1);
-			if(index == 0) {
+			int ind = presentIdent(1);
+			if(ind == 0) {
 				UtilLex.messErr("Attention !! La variable que vous essayez de modifier n'existe pas !");
 			}
 			else {
-				if(tabSymb[index].categorie == VARGLOBALE || tabSymb[index].categorie == VARLOCALE) {
-					if(tabSymb[index].type != tCour) {
+				if(tabSymb[ind].categorie == VARGLOBALE || tabSymb[ind].categorie == VARLOCALE) {
+					if(tabSymb[ind].type != tCour) {
 						UtilLex.messErr("Les 2 membres gauche et droite de l'affection ne sont pas du même type !");
 					}
 					else {
 						po.produire(EMPILER);
 						po.produire(vCour);
 						po.produire(AFFECTERG);
-						po.produire(tabSymb[index].info);
+						po.produire(tabSymb[ind].info);
 					}
 				}
-				else if(tabSymb[index].categorie == CONSTANTE) {
+				else if(tabSymb[ind].categorie == CONSTANTE) {
 					UtilLex.messErr("Impossible d'affecter une valeur à une constante (qui est non mutable) !");
 				}
 			}
 			break;
 		
 		
-		case 49: // Type entier
+		case 49: // type ent
 		{
 			tCour = ENT;
 			break;
 		}
 
-		case 50: // Type booléen
+		case 50: // type bool
 		{
 			tCour = BOOL;
 			break;
 		}
 
-		case 51: // Lecture
+		case 51: // lecture TODO
 		{
-			
-			int index_lect = presentIdent(1);
-			if (index_lect == 0) {
-				UtilLex.messErr("L'ident n'est pas dans la table des symboles");
-			} else {
-				EltTabSymb elt = tabSymb[index_lect];
+			/*
+			int index = presentIdent(-1);
+			if (index == -1) {
+				UtilLex.messErr("Identifiant : -1 inconnu.");
+			} */
+			EltTabSymb e = tabSymb[UtilLex.numIdCourant];
 
-				if(elt.categorie == VARGLOBALE || elt.categorie == VARLOCALE) {
-					po.produire(CONTENUG);
+			switch (e.categorie)
+			{
+				case CONSTANTE:
+				{
+					po.produire(e.info);
+					break;
 				}
-				po.produire(elt.info);
+				case VARGLOBALE:
+				{
+					po.produire(CONTENUG);
+					po.produire(e.info);
+					break;
+				}
+
+				default: break;
 			}
-			break;
+			
 		}
 
-		case 52: // Ecriture
+		case 52: // ecriture
 		{
-			if(tCour == ENT) {
-				po.produire(ECRENT);
-			} else if (tCour == BOOL) {
-				po.produire(ECRBOOL);
+			switch (tCour)
+			{
+				case ENT:
+					po.produire(ECRENT);
+					break;
+				case BOOL:
+					po.produire(ECRBOOL);
+					break;
 			}
 			break;
 		}
