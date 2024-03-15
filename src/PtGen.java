@@ -195,8 +195,7 @@ public class PtGen {
     
 
 	/**
-	 *  initialisations A COMPLETER SI BESOIN
-	 *  -------------------------------------
+	 * initialisations
 	 */
 	public static void initialisations() {
 
