@@ -274,62 +274,48 @@ public class PtGen {
 			}
 			break;
 		
-		
-		case 49: // Changement type courant => Type entier
+
+		case 49: // Type entier
 		{
 			tCour = ENT;
 			break;
 		}
 
-		case 50: // Changement type courant => Type booléen
+		case 50: // Type booléen
 		{
 			tCour = BOOL;
 			break;
 		}
 
-		case 51: // lecture TODO
+		case 51: // Lecture
 		{
-			/*
-			int index = presentIdent(-1);
-			if (index == -1) {
-				UtilLex.messErr("Identifiant : -1 inconnu.");
-			} */
-			EltTabSymb e = tabSymb[UtilLex.numIdCourant];
-
-			switch (e.categorie)
-			{
-				case CONSTANTE:
-				{
-					po.produire(e.info);
-					break;
-				}
-				case VARGLOBALE:
-				{
-					po.produire(CONTENUG);
-					po.produire(e.info);
-					break;
-				}
-
-				default: break;
-			}
 			
-		}
+			int index_lect = presentIdent(1);
+			if (index_lect == 0) {
+				UtilLex.messErr("L'ident n'est pas dans la table des symboles");
+			} else {
+				EltTabSymb elt = tabSymb[index_lect];
 
-		case 52: // ecriture
-		{
-			switch (tCour)
-			{
-				case ENT:
-					po.produire(ECRENT);
-					break;
-				case BOOL:
-					po.produire(ECRBOOL);
-					break;
+				if(elt.categorie == VARGLOBALE || elt.categorie == VARLOCALE) {
+					po.produire(CONTENUG);
+				}
+				po.produire(elt.info);
 			}
 			break;
 		}
 
-
+		case 52: // Ecriture
+		{
+			if(tCour == ENT) {
+				po.produire(ECRENT);
+			} else if (tCour == BOOL) {
+				po.produire(ECRBOOL);
+			}
+			break;
+		}
+			
+			
+	
 
 		case 113: // exp2 -> 'non'
 		{
@@ -454,10 +440,12 @@ public class PtGen {
 			verifBool();
 			break;
 		}
+
+		// TODO
 			
 		case 255 : 
 		{
-			afftabSymb(); // Affichage de la table des symboles en fin de compilation
+			afftabSymb(); // affichage de la table des symboles en fin de compilation
 			break;
 		}
 
