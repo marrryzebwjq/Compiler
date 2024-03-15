@@ -313,9 +313,6 @@ public class PtGen {
 			}
 			break;
 		}
-			
-			
-	
 
 		case 113: // exp2 -> 'non'
 		{
