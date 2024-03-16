@@ -36,3 +36,6 @@ Projet_CMPL.iml
 .gitignore
 .idea/vcs.xml
 .idea/vcs.xml
+
+/tests/*.obj
+/tests/*.gen
