@@ -116,8 +116,8 @@ instruction
 inssi : 'si' expression {PtGen.pt(98);} 'alors' instructions ({PtGen.pt(97);} 'sinon' instructions)? 'fsi' {PtGen.pt(93);}
   ;
   
-inscond : 'cond' expression {PtGen.pt(98)} ':' instructions {PtGen.pt(97);}
-          (','  expression {PtGen.pt(98)} ':' instructions {PtGen.pt(96);})*
+inscond : 'cond' expression {PtGen.pt(98);} ':' instructions {PtGen.pt(97);}
+          (','  expression {PtGen.pt(98);} ':' instructions {PtGen.pt(96);})*
           ('aut' instructions |  )
           'fcond' {PtGen.pt(95);}
   ;
