@@ -245,7 +245,7 @@ public class PtGen {
 					placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
 					nbrAdr++;
 				} else {    // Si la variable a déjà été déclarée précédemment, message d'erreur !
-					UtilLex.messErr("Attention !! variable déjà déclarée précédemment !");
+					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
 				break;
 			}
@@ -254,7 +254,7 @@ public class PtGen {
 			{
 				po.produire(RESERVER);
 				po.produire(nbrAdr);        // Le nombre de variables lues.
-				nbrAdr = 0;                    // On réinitialise pour la prochaine reconnaissance.
+				nbrAdr = 0;                 // On réinitialise pour la prochaine reconnaissance.
 				break;
 			}
 
@@ -262,10 +262,10 @@ public class PtGen {
 			{
 				int ind = presentIdent(1);
 				if (ind == 0) {
-					UtilLex.messErr("Attention !! La variable que vous essayez d'affecter n'éxiste pas !");
+					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'a pas été déclaré !");
 				} else {
 					if (tabSymb[ind].categorie != VARGLOBALE && tabSymb[ind].categorie != VARLOCALE) {
-						UtilLex.messErr("Attention !! L'identifiant n'est pas une variable !");
+						UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'est pas une variable !");
 					}
 				}
 				vAff = ind;
@@ -278,7 +278,7 @@ public class PtGen {
 				if (ind == 0) {
 					placeIdent(UtilLex.numIdCourant, CONSTANTE, tCour, vCour);
 				} else {
-					UtilLex.messErr("Attention !! La constante que vous essayez de créer existe déjà !");
+					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
 				break;
 			}
@@ -286,7 +286,7 @@ public class PtGen {
 			case 5: // Affectation
 			{
 				if (vAff == 0) {
-					UtilLex.messErr("Attention !! La variable que vous essayez de réserver n'existe pas !");
+					UtilLex.messErr("Attention !! La variable que vous essayez de réserver n'existe pas !"); // Cette erreur ne devrait pas apparaître
 				} else {
 					if (tabSymb[vAff].type != tCour) {
 						UtilLex.messErr("Les 2 membres gauche et droite de l'affection ne sont pas du même type !");
@@ -322,7 +322,7 @@ public class PtGen {
 
 				int index_lect = presentIdent(1);
 				if (index_lect == 0) {
-					UtilLex.messErr("L'identifiant n'est pas dans la table des symboles !");
+					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'a pas été déclaré !");
 				} else {
 					EltTabSymb elt = tabSymb[index_lect];
 
@@ -331,7 +331,7 @@ public class PtGen {
 					} else if (elt.type == BOOL) {
 						po.produire(LIREBOOL);
 					} else {
-						UtilLex.messErr("Type de variable non reconnue !");
+						UtilLex.messErr("Type de variable non reconnu !");
 					}
 
 					if (elt.categorie == VARGLOBALE) {
@@ -339,7 +339,7 @@ public class PtGen {
 					} else if (elt.categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
 					} else if (elt.categorie == CONSTANTE) {
-						UtilLex.messErr("L'identifiant est une constante !");
+						UtilLex.messErr("Impossible d'affecter une valeur à une constante !");
 					} else {
 						UtilLex.messErr("Catégorie non reconnue !");
 					}
@@ -441,7 +441,7 @@ public class PtGen {
 			{
 				int index = presentIdent(1);
 				if (index == 0) {
-					UtilLex.messErr("Identifiant : " + index + " inconnu.");
+					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'a pas été déclaré !");
 				}
 
 				EltTabSymb e = tabSymb[index];
