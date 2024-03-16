@@ -294,13 +294,12 @@ public class PtGen {
 
 					if (tabSymb[vAff].categorie == VARGLOBALE) {
 						po.produire(AFFECTERG);
-						po.produire(vAff);
 					} else if (tabSymb[vAff].categorie == CONSTANTE) {
 						po.produire(AFFECTERL);
-						po.produire(vAff);
 					} else {
 						UtilLex.messErr("Catégorie non prévue !");
 					}
+					po.produire(tabSymb[vAff].info);
 				}
 				vAff = 0;
 				break;
@@ -324,7 +323,7 @@ public class PtGen {
 				int index_lect = presentIdent(1);
 				if (index_lect == 0) {
 					UtilLex.messErr("L'identifiant n'est pas dans la table des symboles !");
-			} else {
+				} else {
 					EltTabSymb elt = tabSymb[index_lect];
 
 					if (elt.type == ENT) {
@@ -594,14 +593,14 @@ public class PtGen {
 			case 118: // Affectation de la valeur booléenne vraie
 			{
 				tCour = BOOL;
-				vCour = 1;
+				vCour = VRAI;
 				break;
 			}
 
 			case 119: // Affectation de la valeur booléenne fausse
 			{
 				tCour = BOOL;
-				vCour = 0;
+				vCour = FAUX;
 				break;
 			}
 
