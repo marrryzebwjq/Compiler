@@ -294,12 +294,13 @@ public class PtGen {
 
 					if (tabSymb[vAff].categorie == VARGLOBALE) {
 						po.produire(AFFECTERG);
-					} else if (tabSymb[vAff].categorie == CONSTANTE) {
+						po.produire(tabSymb[vAff].info);
+					} else if (tabSymb[vAff].categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
+						// TODO: VarLocale
 					} else {
 						UtilLex.messErr("Catégorie non prévue !");
 					}
-					po.produire(tabSymb[vAff].info);
 				}
 				vAff = 0;
 				break;

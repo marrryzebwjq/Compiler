@@ -37,5 +37,8 @@ Projet_CMPL.iml
 .idea/vcs.xml
 .idea/vcs.xml
 
+.obj
+.gen
+
 /tests/*.obj
 /tests/*.gen
