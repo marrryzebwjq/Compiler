@@ -7,3 +7,4 @@ _ déclarations
 _ expressions
 _ instructions de base
 _ structures de contrôle si, ttq, et cond
+_ écriture des fichiers mnémoniques et programme objet mapile en fin de compilation
