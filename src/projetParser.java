@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-// $ANTLR 3.5.2 projet.g 2024-03-18 18:13:50
+// $ANTLR 3.5.2 projet.g 2024-03-18 18:30:43
            
-=======
-// $ANTLR 3.5.2 projet.g 2024-03-18 17:56:00
-
-// $ANTLR 3.5.2 projet.g 2024-03-16 14:31:07
-// $ANTLR 3.5.2 projet.g 2024-03-16 23:01:47
-
->>>>>>> 4ea5f894b5f5cb18e69dd46da6eb41d593289d31
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -696,7 +688,6 @@ public class projetParser extends Parser {
 					ptvg();
 					state._fsp--;
 
-						PtGen.pt(2);
 					}
 					break;
 
@@ -708,6 +699,7 @@ public class projetParser extends Parser {
 				cnt15++;
 			}
 
+			PtGen.pt(2);
 			}
 
 		}
@@ -1418,8 +1410,8 @@ public class projetParser extends Parser {
 				case 1 :
 					// projet.g:116:63: 'sinon' instructions
 					{
+					match(input,52,FOLLOW_52_in_inssi707); 
 					PtGen.pt(97);
-					match(input,52,FOLLOW_52_in_inssi709); 
 					pushFollow(FOLLOW_instructions_in_inssi711);
 					instructions();
 					state._fsp--;
@@ -2677,7 +2669,7 @@ public class projetParser extends Parser {
 	public static final BitSet FOLLOW_expression_in_inssi698 = new BitSet(new long[]{0x0000000002000000L});
 	public static final BitSet FOLLOW_25_in_inssi702 = new BitSet(new long[]{0x0028080210040020L});
 	public static final BitSet FOLLOW_instructions_in_inssi704 = new BitSet(new long[]{0x0010040000000000L});
-	public static final BitSet FOLLOW_52_in_inssi709 = new BitSet(new long[]{0x0028080210040020L});
+	public static final BitSet FOLLOW_52_in_inssi707 = new BitSet(new long[]{0x0028080210040020L});
 	public static final BitSet FOLLOW_instructions_in_inssi711 = new BitSet(new long[]{0x0000040000000000L});
 	public static final BitSet FOLLOW_42_in_inssi715 = new BitSet(new long[]{0x0000000000000002L});
 	public static final BitSet FOLLOW_28_in_inscond730 = new BitSet(new long[]{0x008040400000A460L});
