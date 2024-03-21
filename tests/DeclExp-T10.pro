@@ -1,4 +1,4 @@
-programme neuvieme:    { Test cond sans rien }
+programme dixieme:    { Test cond avec un aut }
 
 var ent n ; ent m;
     bool b;
@@ -8,6 +8,8 @@ debut
 
     cond
         b=vrai et n=1 : m:= 10
+    aut
+        m:=30
     fcond ;
 
     ecrire (n)
