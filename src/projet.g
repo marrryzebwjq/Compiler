@@ -74,7 +74,7 @@ type  : 'ent' {PtGen.pt(49);}
   |     'bool' {PtGen.pt(50);}
   ;
   
-decprocs: (decproc ptvg)+
+decprocs: ({PtGen.pt(47);} decproc ptvg {PtGen.pt(48);})+
   ;
   
 decproc : 'proc' ident {PtGen.pt(6)} parfixe? parmod? consts? vars? corps

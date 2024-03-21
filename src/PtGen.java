@@ -316,6 +316,7 @@ public class PtGen {
 				break;
 			}
 
+<<<<<<< HEAD
 			case 6: // Déclarer une procédure.
 			{
 				int ind = presentIdent(1);
@@ -329,6 +330,22 @@ public class PtGen {
 				break;
 			}
 
+=======
+			case 47: // Début bincond du saut des déclarations des procédures vers les instructions principales
+			{
+				po.produire(BINCOND);
+				po.produire(0);
+				pileRep.empiler(po.getIpo());
+				break;
+			}
+
+			case 48: // Fin bincond du saut des déclarations des procédures vers les instructions principales
+			{
+				int ipoBincond = pileRep.depiler();
+				po.modifier(ipoBincond, po.getIpo() + 1);
+			}
+
+>>>>>>> 05923435838e35abb755f6a04fbb20d7295c4d71
 			case 49: // Type entier
 			{
 				tCour = ENT;
