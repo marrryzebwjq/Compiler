@@ -297,7 +297,7 @@ public class PtGen {
 						po.produire(tabSymb[vAff].info);
 					} else if (tabSymb[vAff].categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
-						// TODO: VarLocale
+						// TODO: Affecter variable locale
 					} else {
 						UtilLex.messErr("Catégorie non prévue !");
 					}
@@ -325,27 +325,41 @@ public class PtGen {
 				if (index_lect == 0) {
 					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'a pas été déclaré !");
 				} else {
-					EltTabSymb elt = tabSymb[index_lect];
+                    EltTabSymb elt = tabSymb[index_lect];
 
-					if (elt.type == ENT) {
-						po.produire(LIRENT);
-					} else if (elt.type == BOOL) {
-						po.produire(LIREBOOL);
-					} else {
-						UtilLex.messErr("Type de variable non reconnu !");
-					}
+                    // Erreur -> Type non reconnu
+                    if (elt.type != ENT && elt.type != BOOL) {
+                        UtilLex.messErr("Type de variable non reconnu !");
+                        break;
+                    }
 
-					if (elt.categorie == VARGLOBALE) {
-						po.produire(AFFECTERG);
+                    // Erreur -> Lecture dans une constante
+                    if (elt.categorie == CONSTANTE) {
+                        UtilLex.messErr("Impossible d'affecter une valeur à une constante !");
+                        break;
+                    }
+
+                    // Erreur -> Catégorie non reconnue
+                    if (elt.categorie != VARGLOBALE && elt.categorie != VARLOCALE) {
+                        UtilLex.messErr("Catégorie de variable non reconnue !");
+                    }
+
+                    // Lecture en fonction de la type de variable
+                    if (elt.type == ENT) {
+                        po.produire(LIRENT);
+                    } else if (elt.type == BOOL) {
+                        po.produire(LIREBOOL);
+                    }
+
+                    // Affectation en fonction de la catégorie de la variable
+                    if (elt.categorie == VARGLOBALE) {
+                        po.produire(AFFECTERG);
+                        po.produire(elt.info);
 					} else if (elt.categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
-					} else if (elt.categorie == CONSTANTE) {
-						UtilLex.messErr("Impossible d'affecter une valeur à une constante !");
-					} else {
-						UtilLex.messErr("Catégorie non reconnue !");
+                        // TODO: Affecter variable locale
 					}
 
-					po.produire(elt.info);
 				}
 				break;
 			}
@@ -417,24 +431,32 @@ public class PtGen {
 				break;
 			}
 
-			case 98:  // Début d'un si
-			{
-				verifBool();
-				po.produire(BSIFAUX);
-				po.produire(0);
-				pileRep.empiler(po.getIpo()); // Empilement de l'indice de l'argument de bsifaux
-				break;
-			}
+            case 98:  // Début d'un si
+            {
+                verifBool();
+                po.produire(BSIFAUX);
+                po.produire(0);
+                pileRep.empiler(po.getIpo()); // Empilement de l'indice de l'argument de bsifaux
+                break;
+            }
 
-			case 99:  // Vérification expression est booléen
-			{
-				verifBool();
-				break;
-			}
+            case 54: // Début nouvelle procédure
+            {
 
-			case 100: // Vérification expression est entier
-			{
-				verifEnt();
+                break;
+            }
+
+            case 55: //
+
+            case 99:  // Vérification expression est booléen
+            {
+                verifBool();
+                break;
+            }
+
+            case 100: // Vérification expression est entier
+            {
+                verifEnt();
 				break;
 			}
 

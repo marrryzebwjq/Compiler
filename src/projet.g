@@ -10,7 +10,7 @@ grammar projet;
 
 options {
   language=Java; k=1;
- }
+}
 
 @header {           
 import java.io.IOException;
@@ -34,14 +34,14 @@ import java.io.FileInputStream;
 catch (RecognitionException e) {reportError (e) ; throw e ; }}
 
 
-unite  :   unitprog {PtGen.pt(255);} EOF
-      |    unitmodule  EOF
+unite : unitprog {PtGen.pt(255);} EOF
+      | unitmodule  EOF
   ;
   
 unitprog
   : 'programme' ident ':'  
      declarations  
-     corps { System.out.println("succes, arret de la compilation "); }
+     corps { System.out.println("succes, arret de la compilation"); }
   ;
   
 unitmodule
@@ -77,7 +77,7 @@ type  : 'ent' {PtGen.pt(49);}
 decprocs: (decproc ptvg)+
   ;
   
-decproc :  'proc'  ident  parfixe? parmod? consts? vars? corps 
+decproc : 'proc' ident {PtGen.pt(54);} parfixe? parmod? consts? vars? corps
   ;
   
 ptvg  : ';'
@@ -149,7 +149,7 @@ expression: (exp1) ({PtGen.pt(99);} 'ou'  exp1 {PtGen.pt(115);} )*
 exp1  : exp2 ({PtGen.pt(99);} 'et' exp2 {PtGen.pt(114);} )*
   ;
   
-exp2  : 'non' exp2 {PtGen.pt(113); PtGen.pt(50);}
+exp2  : 'non' exp2 {PtGen.pt(113);}
   | exp3
   ;
   
@@ -164,14 +164,14 @@ exp3  : exp4
   ;
   
 exp4  : exp5 
-        ('+' {PtGen.pt(100);} exp5 {PtGen.pt(106); PtGen.pt(49);}
-        |'-' {PtGen.pt(100);} exp5 {PtGen.pt(105); PtGen.pt(49);}
+        ('+' {PtGen.pt(100);} exp5 {PtGen.pt(106);}
+        |'-' {PtGen.pt(100);} exp5 {PtGen.pt(105);}
         )*
   ;
   
 exp5  : primaire 
-        (    '*'  {PtGen.pt(100);} primaire {PtGen.pt(104); PtGen.pt(49);}
-          | 'div' {PtGen.pt(100);} primaire {PtGen.pt(103); PtGen.pt(49);}
+        (    '*'  {PtGen.pt(100);} primaire {PtGen.pt(104);}
+          | 'div' {PtGen.pt(100);} primaire {PtGen.pt(103);}
         )*
   ;
   
