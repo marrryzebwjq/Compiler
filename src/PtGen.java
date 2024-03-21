@@ -238,7 +238,6 @@ public class PtGen {
 				break;
 			}
 
-
 			case 1: // A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
 			{
 				if (presentIdent(1) == 0) {
@@ -374,6 +373,12 @@ public class PtGen {
 				break;
 			}
 
+			case 91:  // Marqueur du début de chaînage
+			{
+				pileRep.empiler(0);
+				break;
+			}
+
 			case 92:  // Début branchement condition du while
 			{
 				pileRep.empiler(po.getIpo() + 1);
@@ -415,19 +420,9 @@ public class PtGen {
 				po.produire(0);
 				int ipoBsifaux = pileRep.depiler(); // Dépilement du bsifaux pour le modifier en po[bsifaux] = ipo + 1
 				po.modifier(ipoBsifaux, po.getIpo() + 1);
-				int ipoBincond = pileRep.depiler(); // Dépilement du bincond pour le chaînage en po[bincond2] = bincond1
+				int ipoBincond = pileRep.depiler(); // Dépilement du bincond pour le chaînage en po[bincond(i)] = bincond(i-1)
 				po.modifier(po.getIpo(), ipoBincond);
 				pileRep.empiler(po.getIpo());
-				break;
-			}
-
-			case 97:  // Premier chaînage
-			{
-				po.produire(BINCOND);
-				po.produire(0);
-				int ipoBsifaux = pileRep.depiler(); // Dépilement du bsifaux pour le modifier en po[bsifaux] = ipo + 1
-				po.modifier(ipoBsifaux, po.getIpo() + 1);
-				pileRep.empiler(po.getIpo());        // Empilement actuel de l'argument de bincond
 				break;
 			}
 
