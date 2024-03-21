@@ -440,14 +440,6 @@ public class PtGen {
                 break;
             }
 
-            case 54: // Début nouvelle procédure
-            {
-
-                break;
-            }
-
-            case 55: //
-
             case 99:  // Vérification expression est booléen
             {
                 verifBool();
