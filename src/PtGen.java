@@ -22,6 +22,7 @@
 
 import org.antlr.runtime.Lexer;
 
+import javax.rmi.CORBA.Util;
 import java.io.*;
 
 /**
@@ -75,8 +76,9 @@ public class PtGen {
 		if (tCour != ENT)
 			UtilLex.messErr("expression entiere attendue");
 	}
+
 	/**
-	 * verification du type booleen de l'expression en cours de compilation 
+	 * verification du type booleen de l'expression en cours de compilation
 	 * (arret de la compilation sinon)
 	 */
 	private static void verifBool() {
@@ -84,14 +86,30 @@ public class PtGen {
 			UtilLex.messErr("expression booleenne attendue");
 	}
 
-    // pile pour gerer les chaines de reprise et les branchements en avant
-    // -------------------------------------------------------------------
+	/**
+	 * verification du type à gauche est le même que le type à droite lors d'une opération égalité / différence
+	 * (arret de la compilation sinon)
+	 */
+	private static void verifMemeTypeGauche() {
+		// Assertion, mauvaise utilisation de la fonction verifMemeTypeGauche
+		assert (tCourLeft != NEUTRE);
 
-    private static TPileRep pileRep;  
+		// Vérification
+		if (tCourLeft != tCour)
+			UtilLex.messErr("types gauche et droite différents! gauche=\"" + tCourLeft + "\", droite=\"" + tCour + "\"");
+
+		// Réinitialisation du type à gauche pour tests d'assertion
+		tCourLeft = NEUTRE;
+	}
+
+	// pile pour gerer les chaines de reprise et les branchements en avant
+	// -------------------------------------------------------------------
+
+	private static TPileRep pileRep;
 
 
-    // production du code objet en memoire
-    // -----------------------------------
+	// production du code objet en memoire
+	// -----------------------------------
 
     private static ProgObjet po;
     
@@ -122,8 +140,9 @@ public class PtGen {
 	// MERCI de renseigner ici un nom pour le trinome, constitue EXCLUSIVEMENT DE LETTRES
 	public static String trinome = "MBassiNoePoint";
 
-	private static int tCour; // type de l'expression compilee
-	private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
+	private static int tCour;      // type de l'expression compilee
+	private static int tCourLeft; // type de l'expression à gauche lors d'une opération qui peut être entière - entière ou bouléenne - bouléenne comme les tests d'égalité.
+	private static int vCour;      // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
 
 	private static int vAff = 0;
 	private static int vAdr = 0;
@@ -215,12 +234,13 @@ public class PtGen {
 		po = new ProgObjet();
 		// COMPILATION SEPAREE: desripteur de l'unite en cours de compilation
 		desc = new Descripteur();
-		
+
 		// initialisation necessaire aux attributs lexicaux
 		UtilLex.initialisation();
-	
+
 		// initialisation du type de l'expression courante
 		tCour = NEUTRE;
+		tCourLeft = NEUTRE;
 
 	} // initialisations
 
@@ -426,13 +446,19 @@ public class PtGen {
 				break;
 			}
 
-            case 98:  // Début d'un si
-            {
-                verifBool();
-                po.produire(BSIFAUX);
-                po.produire(0);
-                pileRep.empiler(po.getIpo()); // Empilement de l'indice de l'argument de bsifaux
-                break;
+			case 97:  // Mémorisation de tcour
+			{
+				tCourLeft = tCour;
+				break;
+			}
+
+			case 98:  // Début d'un si
+			{
+				verifBool();
+				po.produire(BSIFAUX);
+				po.produire(0);
+				pileRep.empiler(po.getIpo()); // Empilement de l'indice de l'argument de bsifaux
+				break;
             }
 
             case 99:  // Vérification expression est booléen
@@ -548,7 +574,7 @@ public class PtGen {
 
 			case 111: // exp3 -> '<>'
 			{
-				verifEnt();
+				verifMemeTypeGauche();
 
 				po.produire(DIFF);
 				break;
@@ -556,7 +582,7 @@ public class PtGen {
 
 			case 112: // exp3 -> '='
 			{
-				verifEnt();
+				verifMemeTypeGauche();
 
 				po.produire(EG);
 				break;
