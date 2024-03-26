@@ -84,6 +84,22 @@ public class PtGen {
 			UtilLex.messErr("expression booleenne attendue");
 	}
 
+	/**
+	 * verification du type à gauche est le même que le type à droite lors d'une opération égalité / différence
+	 * (arret de la compilation sinon)
+	 */
+	private static void verifMemeTypeGauche() {
+		// Assertion, mauvaise utilisation de la fonction verifMemeTypeGauche
+		assert (tCourLeft != NEUTRE);
+
+		// Vérification
+		if (tCourLeft != tCour)
+			UtilLex.messErr("types gauche et droite différents! gauche=\"" + tCourLeft + "\", droite=\"" + tCour + "\"");
+
+		// Réinitialisation du type à gauche pour tests d'assertion
+		tCourLeft = NEUTRE;
+	}
+
     // pile pour gerer les chaines de reprise et les branchements en avant
     // -------------------------------------------------------------------
 
@@ -123,6 +139,7 @@ public class PtGen {
 	public static String trinome = "MBassiNoePoint";
 
 	private static int tCour; // type de l'expression compilee
+	private static int tCourLeft; // type de l'expression à gauche lors d'une opération qui peut être entière-entière, ou booléenne-booléenne comme les tests d'égalité.
 	private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
 
 	private static int vAff = 0;
@@ -307,7 +324,7 @@ public class PtGen {
 						po.produire(tabSymb[vAff].info);
 					} else if (tabSymb[vAff].categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
-						// TODO: VarLocale
+						// TODO: Affecter variable locale
 					} else {
 						UtilLex.messErr("Catégorie non prévue !");
 					}
@@ -316,7 +333,6 @@ public class PtGen {
 				break;
 			}
 
-<<<<<<< HEAD
 			case 6: // Déclarer une procédure.
 			{
 				int ind = presentIdent(1);
@@ -330,7 +346,6 @@ public class PtGen {
 				break;
 			}
 
-=======
 			case 47: // Début bincond du saut des déclarations des procédures vers les instructions principales
 			{
 				po.produire(BINCOND);
@@ -338,14 +353,13 @@ public class PtGen {
 				pileRep.empiler(po.getIpo());
 				break;
 			}
-
+/*
 			case 48: // Fin bincond du saut des déclarations des procédures vers les instructions principales
 			{
 				int ipoBincond = pileRep.depiler();
 				po.modifier(ipoBincond, po.getIpo() + 1);
 			}
-
->>>>>>> 05923435838e35abb755f6a04fbb20d7295c4d71
+*/
 			case 49: // Type entier
 			{
 				tCour = ENT;
@@ -365,30 +379,45 @@ public class PtGen {
 				if (index_lect == 0) {
 					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'a pas été déclaré !");
 				} else {
-					EltTabSymb elt = tabSymb[index_lect];
+                    EltTabSymb elt = tabSymb[index_lect];
 
-					if (elt.type == ENT) {
-						po.produire(LIRENT);
-					} else if (elt.type == BOOL) {
-						po.produire(LIREBOOL);
-					} else {
-						UtilLex.messErr("Type de variable non reconnu !");
-					}
+                    // Erreur -> Type non reconnu
+                    if (elt.type != ENT && elt.type != BOOL) {
+                        UtilLex.messErr("Type de variable non reconnu !");
+                        break;
+                    }
 
-					if (elt.categorie == VARGLOBALE) {
-						po.produire(AFFECTERG);
+                    // Erreur -> Lecture dans une constante
+                    if (elt.categorie == CONSTANTE) {
+                        UtilLex.messErr("Impossible d'affecter une valeur à une constante !");
+                        break;
+                    }
+
+                    // Erreur -> Catégorie non reconnue
+                    if (elt.categorie != VARGLOBALE && elt.categorie != VARLOCALE) {
+                        UtilLex.messErr("Catégorie de variable non reconnue !");
+                    }
+
+                    // Lecture en fonction de la type de variable
+                    if (elt.type == ENT) {
+                        po.produire(LIRENT);
+                    } else if (elt.type == BOOL) {
+                        po.produire(LIREBOOL);
+                    }
+
+                    // Affectation en fonction de la catégorie de la variable
+                    if (elt.categorie == VARGLOBALE) {
+                        po.produire(AFFECTERG);
+                        po.produire(elt.info);
 					} else if (elt.categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
-					} else if (elt.categorie == CONSTANTE) {
-						UtilLex.messErr("Impossible d'affecter une valeur à une constante !");
-					} else {
-						UtilLex.messErr("Catégorie non reconnue !");
+                        // TODO: Affecter variable locale
 					}
 
-					po.produire(elt.info);
 				}
 				break;
 			}
+
 
 			case 52: // Ecriture
 			{
@@ -397,6 +426,12 @@ public class PtGen {
 				} else if (tCour == BOOL) {
 					po.produire(ECRBOOL);
 				}
+				break;
+			}
+
+			case 91:  // Marqueur du début de chaînage
+			{
+				pileRep.empiler(0);
 				break;
 			}
 
@@ -441,21 +476,18 @@ public class PtGen {
 				po.produire(0);
 				int ipoBsifaux = pileRep.depiler(); // Dépilement du bsifaux pour le modifier en po[bsifaux] = ipo + 1
 				po.modifier(ipoBsifaux, po.getIpo() + 1);
-				int ipoBincond = pileRep.depiler(); // Dépilement du bincond pour le chaînage en po[bincond2] = bincond1
+				int ipoBincond = pileRep.depiler(); // Dépilement du bincond pour le chaînage en po[bincond(i)] = bincond(i-1)
 				po.modifier(po.getIpo(), ipoBincond);
 				pileRep.empiler(po.getIpo());
 				break;
 			}
-
-			case 97:  // Premier chaînage
+			
+			case 97:  // Mémorisation de tcour
 			{
-				po.produire(BINCOND);
-				po.produire(0);
-				int ipoBsifaux = pileRep.depiler(); // Dépilement du bsifaux pour le modifier en po[bsifaux] = ipo + 1
-				po.modifier(ipoBsifaux, po.getIpo() + 1);
-				pileRep.empiler(po.getIpo());        // Empilement actuel de l'argument de bincond
+				tCourLeft = tCour;
 				break;
 			}
+
 
 			case 98:  // Début d'un si
 			{
@@ -579,7 +611,7 @@ public class PtGen {
 
 			case 111: // exp3 -> '<>'
 			{
-				verifEnt();
+				verifMemeTypeGauche();
 
 				po.produire(DIFF);
 				break;
@@ -587,7 +619,7 @@ public class PtGen {
 
 			case 112: // exp3 -> '='
 			{
-				verifEnt();
+				verifMemeTypeGauche();
 
 				po.produire(EG);
 				break;
