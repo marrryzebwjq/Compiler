@@ -324,7 +324,12 @@ public class PtGen {
 						po.produire(tabSymb[vAff].info);
 					} else if (tabSymb[vAff].categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
-						// TODO: Affecter variable locale
+						po.produire(tabSymb[vAff].info);
+						po.produire(0); // Variable locale
+					} else if (tabSymb[vAff].categorie == PARAMMOD) {
+						po.produire(AFFECTERL);
+						po.produire(tabSymb[vAff].info);
+						po.produire(1);
 					} else {
 						UtilLex.messErr("Catégorie non prévue !");
 					}
@@ -333,16 +338,32 @@ public class PtGen {
 				break;
 			}
 
-			case 6: // Déclarer une procédure.
+			case 6: // Déclarer une procédure
 			{
 				int ind = presentIdent(1);
 				if (ind == 0) {
 					placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo() + 1);
 					placeIdent(-1, PRIVEE, NEUTRE, 0);
-					vAdr = 2;
+					bc = it + 1;
 				} else {
 					UtilLex.messErr("Attention !! \" procédure " + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
+
+				// Début du comptage du nombre de paramètres lors de la déclaration d'une fonction
+				nbrAdr = 0;
+
+				break;
+			}
+
+			case 7: // Ajout d'un paramètre fixe
+			{
+
+				break;
+			}
+
+			case 8: // Ajout d'un paramètre mod
+			{
+
 				break;
 			}
 
@@ -394,9 +415,9 @@ public class PtGen {
                     }
 
                     // Erreur -> Catégorie non reconnue
-                    if (elt.categorie != VARGLOBALE && elt.categorie != VARLOCALE) {
-                        UtilLex.messErr("Catégorie de variable non reconnue !");
-                    }
+					if (elt.categorie != VARGLOBALE && elt.categorie != VARLOCALE && elt.categorie != PARAMMOD) {
+						UtilLex.messErr("Catégorie de variable non reconnue !");
+					}
 
                     // Lecture en fonction de la type de variable
                     if (elt.type == ENT) {
@@ -411,7 +432,12 @@ public class PtGen {
                         po.produire(elt.info);
 					} else if (elt.categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
-                        // TODO: Affecter variable locale
+						po.produire(elt.info);
+						po.produire(0);
+					} else if (elt.categorie == PARAMMOD) {
+						po.produire(AFFECTERL);
+						po.produire(elt.info);
+						po.produire(1);
 					}
 
 				}
@@ -531,6 +557,27 @@ public class PtGen {
 						tCour = e.type;
 						po.produire(CONTENUG);
 						po.produire(e.info);
+						break;
+					}
+
+					case VARLOCALE: {
+						tCour = e.type;
+						po.produire(CONTENUL);
+						po.produire(e.info);
+						po.produire(0);
+						break;
+					}
+
+					case PARAMFIXE: {
+						tCour = e.type;
+						po.produire(CONTENUL);
+						po.produire(e.info);
+						po.produire(1);
+						break;
+					}
+
+					default: {
+						UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'a pas une catégorie correcte!");
 						break;
 					}
 				}
@@ -677,13 +724,8 @@ public class PtGen {
 				break;
 			}
 
-			case 120: // Arrêt
-			{
-				po.produire(ARRET);
-				break;
-			}
-
 			case 255: {
+				po.produire(ARRET);
 				afftabSymb();  // Affichage de la table des symboles en fin de compilation
 				po.constGen(); // Ecriture du fichier de mnémoniques
 				po.constObj(); // Ecriture du fichier objet

@@ -84,19 +84,19 @@ ptvg  : ';'
   | 
   ;
   
-corps : 'debut' instructions 'fin' {PtGen.pt(120);}
+corps : 'debut' instructions 'fin'
   ;
   
 parfixe: 'fixe' '(' pf ( ';' pf)* ')'
   ;
   
-pf  : type ident  ( ',' ident  )*  
+pf  : type ident {PtGen.pt(7);} ( ',' ident {PtGen.pt(7);} )*
   ;
 
 parmod  : 'mod' '(' pm ( ';' pm)* ')'
   ;
   
-pm  : type ident  ( ',' ident  )*
+pm  : type ident {PtGen.pt(8);} ( ',' ident {PtGen.pt(8);} )*
   ;
   
 instructions
