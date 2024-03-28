@@ -95,7 +95,7 @@
       <option name="presentableId" value="Default" />
       <updated>1710513681076</updated>
       <workItem from="1710513683014" duration="8821000" />
-      <workItem from="1711634397797" duration="6034000" />
+      <workItem from="1711634397797" duration="6108000" />
     </task>
     <task id="LOCAL-00001" summary="Commit du changement github à gitlab">
       <created>1710514109382</created>
@@ -209,12 +209,12 @@
       <option name="project" value="LOCAL" />
       <updated>1711638572752</updated>
     </task>
-    <task id="LOCAL-00017" summary="Correction d'un plus.">
-      <created>1711641578333</created>
+    <task id="LOCAL-00017" summary="Ajout de l'appel et de la compilation des paramètres.">
+      <created>1711640746285</created>
       <option name="number" value="00017" />
       <option name="presentableId" value="LOCAL-00017" />
       <option name="project" value="LOCAL" />
-      <updated>1711641578333</updated>
+      <updated>1711640746285</updated>
     </task>
     <option name="localTasksCounter" value="18" />
     <servers />
@@ -237,8 +237,8 @@
     <MESSAGE value="Ajout du bincond du saut de la déclaration des procédures." />
     <MESSAGE value="Affectation et contenu des variables locales + paramètres fixes.&#10;Correction du code arrêt." />
     <MESSAGE value="Rajout du point de génération 48." />
-    <MESSAGE value="Correction d'un plus." />
-    <option name="LAST_COMMIT_MESSAGE" value="Correction d'un plus." />
+    <MESSAGE value="Ajout de l'appel et de la compilation des paramètres." />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout de l'appel et de la compilation des paramètres." />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
