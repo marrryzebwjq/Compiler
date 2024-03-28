@@ -356,8 +356,6 @@ public class PtGen {
 					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
 
-				int id = it + 1 - bc;
-
 				break;
 			}
 
@@ -370,14 +368,12 @@ public class PtGen {
 					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
 
-				int id = it + 1 - bc;
-
 				break;
 			}
 
 			case 9: // Fin de la déclaration des paramètres
 			{
-				// Modification de la table des symboles pour affecter le nombre de paramètres
+				// Modification de la table des symboles pour modifier le nombre de paramètres d'une procédure
 				EltTabSymb elt = tabSymb[bc - 1];
 				elt.info = it - bc;
 				break;
@@ -386,7 +382,7 @@ public class PtGen {
 			case 10: // Vérification si type de paramètre fixe est correcte par rapport à la table des symboles
 			{
 				// Vérification du type de la variable avec le type de paramètre
-				EltTabSymb elt = tabSymb[bc + nbrAdr];
+				EltTabSymb elt = tabSymb[bc + nbrAdr++];
 				if (elt.type != tCour) {
 					UtilLex.messErr("Attention !! le type du paramètre  \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
 					break;
@@ -404,11 +400,12 @@ public class PtGen {
 					break;
 				}
 
+				// Récupération de la variable affectée
 				EltTabSymb var = tabSymb[ind];
 				tCour = var.type;
 
 				// Vérification du type de la variable
-				EltTabSymb arg = tabSymb[bc + nbrAdr];
+				EltTabSymb arg = tabSymb[bc + nbrAdr++];
 				if (arg.type != tCour) {
 					UtilLex.messErr("Attention !! le type du paramètre  \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
 				}
@@ -446,10 +443,12 @@ public class PtGen {
 
 			case 12: // Fin de l'appel de la fonction
 			{
+				// Production de l'appel
 				po.produire(APPEL);
 				po.produire(tabSymb[vFun + 0].info);
 				po.produire(tabSymb[vFun + 1].info);
 
+				// Réinitialisation des variables de contrôle
 				vFun = 0;
 				nbrAdr = 0;
 				break;
@@ -457,22 +456,27 @@ public class PtGen {
 
 			case 13: // Indexation de la procédure pour récupérer son ipo
 			{
+				// vFun est utilisé pour identifier la procédure actuellement traitée (ne peut être bc, dans le cas d'un appel d'une procédure dans une autre)
 				vFun = presentIdent(1);
 				if (vFun == 0) {
 					UtilLex.messErr("Attention !! procédure \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" non déclarée !");
 					break;
 				}
-
 				break;
 			}
 
 
 			case 46: // Masquage du code des paramètres à la fin de la déclaration d'une procédure
 			{
-				// Les paramètres et les variables sont entre bc et it.
+				// On produit retour
+				po.produire(RETOUR);
+				po.produire(tabSymb[bc - 1].info);
+
+				// Les paramètres, les variables et les constantes locales sont entre bc et it.
 				for (int i = bc; i <= it; i++) {
 					tabSymb[i].code = -1;
 				}
+
 				// On réinitialise bc.
 				bc = 1;
 				break;
