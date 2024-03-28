@@ -147,7 +147,6 @@ public class PtGen {
 	private static int vFun = 0;
 	private static int vAdr = 0;
 	private static int nbrAdr = 0;
-	private static boolean inLocalContext = false;
 
 	// TABLE DES SYMBOLES
 	// ------------------
@@ -229,7 +228,6 @@ public class PtGen {
 		// Variable pour gérer les adresses des variables.
 		vAdr = 0;
 		nbrAdr = 0;
-		inLocalContext = false;
 
 		// pile des reprises pour compilation des branchements en avant
 		pileRep = new TPileRep();
@@ -264,8 +262,8 @@ public class PtGen {
 			case 1: // A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
 			{
 				if (presentIdent(1) == 0) {
-					if (inLocalContext)
-						placeIdent(UtilLex.numIdCourant, VARLOCALE, tCour, vAdr++);
+					if (bc > 1)
+						placeIdent(UtilLex.numIdCourant, VARLOCALE, tCour, tabSymb[bc - 1].info + 3 + vAdr++);
 					else
 						placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
 					nbrAdr++;
@@ -278,12 +276,8 @@ public class PtGen {
 			case 2: // Réserver nbrAdr espaces mémoire.
 			{
 				po.produire(RESERVER);
-				if (bc == 1) {
-					po.produire(nbrAdr);        // Le nombre de variables lues en global.
-					nbrAdr = 0;                 // On réinitialise pour la prochaine reconnaissance.
-				} else {
-					po.produire(it - bc + 2);        // Le nombre de variables lues en local.
-				}
+				po.produire(nbrAdr);        // Le nombre de variables lues en global.
+				nbrAdr = 0;                 // On réinitialise pour la prochaine reconnaissance.
 				break;
 			}
 
@@ -362,6 +356,8 @@ public class PtGen {
 					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
 
+				int id = it + 1 - bc;
+
 				break;
 			}
 
@@ -373,6 +369,8 @@ public class PtGen {
 				} else {
 					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
+
+				int id = it + 1 - bc;
 
 				break;
 			}
@@ -468,6 +466,18 @@ public class PtGen {
 				break;
 			}
 
+
+			case 46: // Masquage du code des paramètres à la fin de la déclaration d'une procédure
+			{
+				// Les paramètres et les variables sont entre bc et it.
+				for (int i = bc; i <= it; i++) {
+					tabSymb[i].code = -1;
+				}
+				// On réinitialise bc.
+				bc = 1;
+				break;
+			}
+
 			case 47: // Début bincond du saut des déclarations des procédures vers les instructions principales
 			{
 				po.produire(BINCOND);
@@ -480,6 +490,7 @@ public class PtGen {
 			{
 				int ipoBincond = pileRep.depiler();
 				po.modifier(ipoBincond, po.getIpo() + 1);
+				break;
 			}
 
 			case 49: // Type entier
