@@ -281,13 +281,13 @@ public class PtGen {
 				break;
 			}
 
-			case 3: // Vérification si variable globale ou locale
+			case 3: // Vérification si variable globale, locale, ou param mod
 			{
 				int ind = presentIdent(1);
 				if (ind == 0) {
 					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'a pas été déclaré !");
 				} else {
-					if (tabSymb[ind].categorie != VARGLOBALE && tabSymb[ind].categorie != VARLOCALE) {
+					if (tabSymb[ind].categorie != VARGLOBALE && tabSymb[ind].categorie != VARLOCALE && tabSymb[ind].categorie != PARAMMOD) {
 						UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'est pas une variable !");
 					}
 				}
