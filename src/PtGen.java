@@ -374,13 +374,13 @@ public class PtGen {
 				pileRep.empiler(po.getIpo());
 				break;
 			}
-/*
+
 			case 48: // Fin bincond du saut des déclarations des procédures vers les instructions principales
 			{
 				int ipoBincond = pileRep.depiler();
 				po.modifier(ipoBincond, po.getIpo() + 1);
 			}
-*/
+			
 			case 49: // Type entier
 			{
 				tCour = ENT;
