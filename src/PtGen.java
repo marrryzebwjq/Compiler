@@ -147,7 +147,6 @@ public class PtGen {
 	private static int vFun = 0;
 	private static int vAdr = 0;
 	private static int nbrAdr = 0;
-	private static boolean inLocalContext = false;
 
 	// TABLE DES SYMBOLES
 	// ------------------
@@ -229,7 +228,6 @@ public class PtGen {
 		// Variable pour gérer les adresses des variables.
 		vAdr = 0;
 		nbrAdr = 0;
-		inLocalContext = false;
 
 		// pile des reprises pour compilation des branchements en avant
 		pileRep = new TPileRep();

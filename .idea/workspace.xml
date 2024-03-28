@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="Correction d'un plus.">
       <change beforePath="$PROJECT_DIR$/src/PtGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PtGen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/projet.g" beforeDir="false" afterPath="$PROJECT_DIR$/src/projet.g" afterDir="false" />
     </list>
