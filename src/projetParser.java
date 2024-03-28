@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 projet.g 2024-03-26 20:48:29
+// $ANTLR 3.5.2 projet.g 2024-03-28 15:35:42
            
 import java.io.IOException;
 import java.io.DataInputStream;
@@ -828,8 +828,8 @@ public class projetParser extends Parser {
 			ident();
 			state._fsp--;
 
-			PtGen.pt(6)
-			// projet.g:80:38: ( parfixe )?
+			PtGen.pt(6);
+			// projet.g:80:39: ( parfixe )?
 			int alt18=2;
 			int LA18_0 = input.LA(1);
 			if ( (LA18_0==41) ) {
@@ -837,7 +837,7 @@ public class projetParser extends Parser {
 			}
 			switch (alt18) {
 				case 1 :
-					// projet.g:80:38: parfixe
+					// projet.g:80:39: parfixe
 					{
 					pushFollow(FOLLOW_parfixe_in_decproc448);
 					parfixe();
@@ -848,7 +848,7 @@ public class projetParser extends Parser {
 
 			}
 
-			// projet.g:80:47: ( parmod )?
+			// projet.g:80:48: ( parmod )?
 			int alt19=2;
 			int LA19_0 = input.LA(1);
 			if ( (LA19_0==44) ) {
@@ -856,7 +856,7 @@ public class projetParser extends Parser {
 			}
 			switch (alt19) {
 				case 1 :
-					// projet.g:80:47: parmod
+					// projet.g:80:48: parmod
 					{
 					pushFollow(FOLLOW_parmod_in_decproc451);
 					parmod();
@@ -867,7 +867,7 @@ public class projetParser extends Parser {
 
 			}
 
-			// projet.g:80:55: ( consts )?
+			// projet.g:80:56: ( consts )?
 			int alt20=2;
 			int LA20_0 = input.LA(1);
 			if ( (LA20_0==29) ) {
@@ -875,7 +875,7 @@ public class projetParser extends Parser {
 			}
 			switch (alt20) {
 				case 1 :
-					// projet.g:80:55: consts
+					// projet.g:80:56: consts
 					{
 					pushFollow(FOLLOW_consts_in_decproc454);
 					consts();
@@ -886,7 +886,7 @@ public class projetParser extends Parser {
 
 			}
 
-			// projet.g:80:63: ( vars )?
+			// projet.g:80:64: ( vars )?
 			int alt21=2;
 			int LA21_0 = input.LA(1);
 			if ( (LA21_0==54) ) {
@@ -894,7 +894,7 @@ public class projetParser extends Parser {
 			}
 			switch (alt21) {
 				case 1 :
-					// projet.g:80:63: vars
+					// projet.g:80:64: vars
 					{
 					pushFollow(FOLLOW_vars_in_decproc457);
 					vars();
