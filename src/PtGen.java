@@ -145,7 +145,6 @@ public class PtGen {
 	private static int vAff = 0;
 	private static int vAdr = 0;
 	private static int nbrAdr = 0;
-	private static boolean inLocalContext = false;
 
 	// TABLE DES SYMBOLES
 	// ------------------
@@ -226,7 +225,6 @@ public class PtGen {
 		// Variable pour gérer les adresses des variables.
 		vAdr = 0;
 		nbrAdr = 0;
-		inLocalContext = false;
 
 		// pile des reprises pour compilation des branchements en avant
 		pileRep = new TPileRep();
@@ -261,8 +259,8 @@ public class PtGen {
 			case 1: // A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
 			{
 				if (presentIdent(1) == 0) {
-					if(inLocalContext)
-						placeIdent(UtilLex.numIdCourant, VARLOCALE, tCour, vAdr++);
+					if(bc > 1)
+						placeIdent(UtilLex.numIdCourant, VARLOCALE, tCour, tabSymb[bc - 1].info + 3 + vAdr++);
 					else
 						placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
 					nbrAdr++;
@@ -275,13 +273,8 @@ public class PtGen {
 			case 2: // Réserver nbrAdr espaces mémoire.
 			{
 				po.produire(RESERVER);
-				if( bc == 1 ) {
-					po.produire(nbrAdr);        // Le nombre de variables lues en global.
-					nbrAdr = 0;                 // On réinitialise pour la prochaine reconnaissance.
-				}
-				else {
-					po.produire(it - bc + 2);        // Le nombre de variables lues en local.
-				}
+				po.produire(nbrAdr);        // Le nombre de variables lues en global.
+				nbrAdr = 0;                 // On réinitialise pour la prochaine reconnaissance.
 				break;
 			}
 
