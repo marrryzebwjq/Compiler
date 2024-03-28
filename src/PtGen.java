@@ -22,6 +22,7 @@
 
 import org.antlr.runtime.Lexer;
 
+import javax.rmi.CORBA.Util;
 import java.io.*;
 
 /**
@@ -143,6 +144,7 @@ public class PtGen {
 	private static int vCour; // sert uniquement lors de la compilation d'une valeur (entiere ou boolenne)
 
 	private static int vAff = 0;
+	private static int vFun = 0;
 	private static int vAdr = 0;
 	private static int nbrAdr = 0;
 	private static boolean inLocalContext = false;
@@ -222,6 +224,7 @@ public class PtGen {
 
 		// Index pour l'affectation
 		vAff = 0;
+		vFun = 0;
 
 		// Variable pour gérer les adresses des variables.
 		vAdr = 0;
@@ -346,7 +349,7 @@ public class PtGen {
 					placeIdent(-1, PRIVEE, NEUTRE, 0);
 					bc = it + 1;
 				} else {
-					UtilLex.messErr("Attention !! \" procédure " + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
+					UtilLex.messErr("Attention !! procédure \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
 				break;
 			}
@@ -355,16 +358,113 @@ public class PtGen {
 			{
 				int ind = presentIdent(bc);
 				if (ind == 0) {
-					
+					placeIdent(UtilLex.numIdCourant, PARAMFIXE, tCour, it + 1 - bc);
+				} else {
+					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
-
-				int id = it + 1 - bc;
 
 				break;
 			}
 
 			case 8: // Ajout d'un paramètre mod
 			{
+				int ind = presentIdent(bc);
+				if (ind == 0) {
+					placeIdent(UtilLex.numIdCourant, PARAMMOD, tCour, it + 1 - bc);
+				} else {
+					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
+				}
+
+				break;
+			}
+
+			case 9: // Fin de la déclaration des paramètres
+			{
+				// Modification de la table des symboles pour affecter le nombre de paramètres
+				EltTabSymb elt = tabSymb[bc - 1];
+				elt.info = it - bc;
+				break;
+			}
+
+			case 10: // Vérification si type de paramètre fixe est correcte par rapport à la table des symboles
+			{
+				// Vérification du type de la variable avec le type de paramètre
+				EltTabSymb elt = tabSymb[bc + nbrAdr];
+				if (elt.type != tCour) {
+					UtilLex.messErr("Attention !! le type du paramètre  \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
+					break;
+				}
+
+				break;
+			}
+
+			case 11: // Passage en argument d'une variable et vérification du type avec la table des symboles
+			{
+				// Vérification de l'éxistence de la variable
+				int ind = presentIdent(1);
+				if (ind == 0) {
+					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" non déclarée !");
+					break;
+				}
+
+				EltTabSymb var = tabSymb[ind];
+				tCour = var.type;
+
+				// Vérification du type de la variable
+				EltTabSymb arg = tabSymb[bc + nbrAdr];
+				if (arg.type != tCour) {
+					UtilLex.messErr("Attention !! le type du paramètre  \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
+				}
+
+				// Récupération du contenu de la variable
+				switch (var.categorie) {
+					case VARGLOBALE: {
+						po.produire(EMPILERADG);
+						po.produire(var.info);
+						break;
+					}
+
+					case VARLOCALE: {
+						po.produire(EMPILERADL);
+						po.produire(var.info);
+						po.produire(0);
+						break;
+					}
+
+					case PARAMMOD: {
+						po.produire(EMPILERADL);
+						po.produire(var.info);
+						po.produire(1);
+						break;
+					}
+
+					default: {
+						UtilLex.messErr("Attention !! la carégorie de l'identifiant  \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" non reconnue !");
+						break;
+					}
+				}
+
+				break;
+			}
+
+			case 12: // Fin de l'appel de la fonction
+			{
+				po.produire(APPEL);
+				po.produire(tabSymb[vFun + 0].info);
+				po.produire(tabSymb[vFun + 1].info);
+
+				vFun = 0;
+				nbrAdr = 0;
+				break;
+			}
+
+			case 13: // Indexation de la procédure pour récupérer son ipo
+			{
+				vFun = presentIdent(1);
+				if (vFun == 0) {
+					UtilLex.messErr("Attention !! procédure \""UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" non déclarée !");
+					break;
+				}
 
 				break;
 			}
