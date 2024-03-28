@@ -147,6 +147,7 @@ public class PtGen {
 	private static int vFun = 0;
 	private static int vAdr = 0;
 	private static int nbrAdr = 0;
+	private static boolean inLocalContext = false;
 
 	// TABLE DES SYMBOLES
 	// ------------------
@@ -228,6 +229,7 @@ public class PtGen {
 		// Variable pour gérer les adresses des variables.
 		vAdr = 0;
 		nbrAdr = 0;
+		inLocalContext = false;
 
 		// pile des reprises pour compilation des branchements en avant
 		pileRep = new TPileRep();
@@ -356,20 +358,13 @@ public class PtGen {
 					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
 
+				int id = it + 1 - bc;
+
 				break;
 			}
 
 			case 8: // Ajout d'un paramètre mod
 			{
-				int ind = presentIdent(bc);
-				if (ind == 0) {
-					placeIdent(UtilLex.numIdCourant, PARAMMOD, tCour, it + 1 - bc);
-				} else {
-					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
-				}
-
-				break;
-			}
 
 			case 9: // Fin de la déclaration des paramètres
 			{
@@ -462,7 +457,7 @@ public class PtGen {
 				break;
 			}
 
-			
+
 			case 46: // Masquage du code des paramètres à la fin de la déclaration d'une procédure
 			{
 				// Les paramètres et les variables sont entre bc et it.
@@ -474,7 +469,7 @@ public class PtGen {
 				bc = 1;
 				break;
 			}
-			
+
 			case 47: // Début bincond du saut des déclarations des procédures vers les instructions principales
 			{
 				po.produire(BINCOND);
