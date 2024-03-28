@@ -363,6 +363,17 @@ public class PtGen {
 
 			case 8: // Ajout d'un paramètre mod
 			{
+				int ind = presentIdent(bc);
+				if (ind == 0) {
+					placeIdent(UtilLex.numIdCourant, PARAMMOD, tCour, it + 1 - bc);
+				} else {
+					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
+				}
+
+				int id = it + 1 - bc;
+				
+				break;
+			}
 
 			case 9: // Fin de la déclaration des paramètres
 			{
@@ -448,7 +459,7 @@ public class PtGen {
 			{
 				vFun = presentIdent(1);
 				if (vFun == 0) {
-					UtilLex.messErr("Attention !! procédure \""UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" non déclarée !");
+					UtilLex.messErr("Attention !! procédure \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" non déclarée !");
 					break;
 				}
 
