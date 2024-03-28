@@ -479,6 +479,19 @@ public class PtGen {
 				break;
 			}
 
+			
+			case 46: // Masquage du code des paramètres à la fin de la déclaration d'une procédure
+			{
+				// Les paramètres et les variables sont entre bc et it.
+				for(int i=bc; i<=it; i++)
+				{
+					tabSymb[i].code = -1;
+				}
+				// On réinitialise bc.
+				bc = 1;
+				break;
+			}
+			
 			case 47: // Début bincond du saut des déclarations des procédures vers les instructions principales
 			{
 				po.produire(BINCOND);
