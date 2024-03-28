@@ -348,15 +348,17 @@ public class PtGen {
 				} else {
 					UtilLex.messErr("Attention !! \" procédure " + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
-
-				// Début du comptage du nombre de paramètres lors de la déclaration d'une fonction
-				nbrAdr = 0;
-
 				break;
 			}
 
 			case 7: // Ajout d'un paramètre fixe
 			{
+				int ind = presentIdent(bc);
+				if (ind == 0) {
+					
+				}
+
+				int id = it + 1 - bc;
 
 				break;
 			}
@@ -380,7 +382,7 @@ public class PtGen {
 				int ipoBincond = pileRep.depiler();
 				po.modifier(ipoBincond, po.getIpo() + 1);
 			}
-			
+
 			case 49: // Type entier
 			{
 				tCour = ENT;
