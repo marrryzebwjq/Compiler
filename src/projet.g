@@ -137,10 +137,10 @@ affouappel
            )
   ;
   
-effixes : '(' (expression  (',' expression  )*)? ')'
+effixes : '(' (expression {PtGen.pt(10);}  (',' expression {PtGen.pt(10);} )*)? ')'
   ;
   
-effmods :'(' (ident {PtGen.pt(10);} (',' ident {PtGen.pt(10);} )*)? ')'
+effmods :'(' (ident {PtGen.pt(11);}  (',' ident {PtGen.pt(11);} )*)? ')'
   ; 
   
 expression: (exp1) ({PtGen.pt(99);} 'ou'  exp1 {PtGen.pt(115);} )*

@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="squash! Ajout du code et des points de gén 46 : Traitement de la fin de la déclaration d'une procédure">
+    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="Correction vérification catégorie de variable affectable au point 3.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PtGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PtGen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/projet.g" beforeDir="false" afterPath="$PROJECT_DIR$/src/projet.g" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/projetLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/projetLexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/projetParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/projetParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +18,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitRewordedCommitMessages">
+    <option name="onto" value="dd1e3759a2f9d2da6cfe1748719540fa9ffbeac4" />
   </component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
@@ -31,6 +37,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.projet.executor": "Run",
     "git-widget-placeholder": "dev",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -231,11 +238,38 @@
       <option name="project" value="LOCAL" />
       <updated>1711640746285</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Merge 2">
+      <option name="closed" value="true" />
+      <created>1711660416549</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1711660416550</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Fin du merge.">
+      <option name="closed" value="true" />
+      <created>1711660813619</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1711660813619</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Correction vérification catégorie de variable affectable au point 3.">
+      <option name="closed" value="true" />
+      <created>1711661118988</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1711661118988</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.pro" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Commit du changement github à gitlab" />
@@ -255,7 +289,10 @@
     <MESSAGE value="Ajout de l'appel et de la compilation des paramètres." />
     <MESSAGE value="squash! Merge 2." />
     <MESSAGE value="squash! Ajout du code et des points de gén 46 : Traitement de la fin de la déclaration d'une procédure" />
-    <option name="LAST_COMMIT_MESSAGE" value="squash! Ajout du code et des points de gén 46 : Traitement de la fin de la déclaration d'une procédure" />
+    <MESSAGE value="Merge 2" />
+    <MESSAGE value="Fin du merge." />
+    <MESSAGE value="Correction vérification catégorie de variable affectable au point 3." />
+    <option name="LAST_COMMIT_MESSAGE" value="Correction vérification catégorie de variable affectable au point 3." />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">

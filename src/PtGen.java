@@ -384,7 +384,7 @@ public class PtGen {
 				// Vérification du type de la variable avec le type de paramètre
 				EltTabSymb elt = tabSymb[bc + nbrAdr++];
 				if (elt.type != tCour) {
-					UtilLex.messErr("Attention !! le type du paramètre  \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
+					UtilLex.messErr("Attention !! le type passé au paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
 					break;
 				}
 
@@ -659,33 +659,33 @@ public class PtGen {
 					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" n'a pas été déclaré !");
 				}
 
+				// Récupération de l'identifiant courant
 				EltTabSymb e = tabSymb[index];
+				tCour = e.type;
 
+				// Empilement de la valeur en fonction du type de l'identifiant
 				switch (e.categorie) {
 					case CONSTANTE: {
-						tCour = e.type;
 						po.produire(EMPILER);
 						po.produire(e.info);
 						break;
 					}
 
 					case VARGLOBALE: {
-						tCour = e.type;
 						po.produire(CONTENUG);
 						po.produire(e.info);
 						break;
 					}
 
-					case VARLOCALE: {
-						tCour = e.type;
+					case VARLOCALE:
+					case PARAMFIXE: {
 						po.produire(CONTENUL);
 						po.produire(e.info);
 						po.produire(0);
 						break;
 					}
 
-					case PARAMFIXE: {
-						tCour = e.type;
+					case PARAMMOD: {
 						po.produire(CONTENUL);
 						po.produire(e.info);
 						po.produire(1);
