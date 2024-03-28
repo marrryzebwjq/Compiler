@@ -147,6 +147,7 @@ public class PtGen {
 	private static int vFun = 0;
 	private static int vAdr = 0;
 	private static int nbrAdr = 0;
+	private static boolean aProcs = false;
 
 	// TABLE DES SYMBOLES
 	// ------------------
@@ -242,6 +243,9 @@ public class PtGen {
 		// initialisation du type de l'expression courante
 		tCour = NEUTRE;
 
+		// Gestion du bincond lors de la présence de procédures
+		aProcs = false;
+
 	} // initialisations
 
 	/**
@@ -263,7 +267,7 @@ public class PtGen {
 			{
 				if (presentIdent(1) == 0) {
 					if (bc > 1)
-						placeIdent(UtilLex.numIdCourant, VARLOCALE, tCour, tabSymb[bc - 1].info + 3 + vAdr++);
+						placeIdent(UtilLex.numIdCourant, VARLOCALE, tCour, tabSymb[bc - 1].info + 2 + vAdr++);
 					else
 						placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
 					nbrAdr++;
@@ -341,6 +345,7 @@ public class PtGen {
 					placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo() + 1);
 					placeIdent(-1, PRIVEE, NEUTRE, 0);
 					bc = it + 1;
+					vAdr = 0;
 				} else {
 					UtilLex.messErr("Attention !! procédure \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
@@ -375,7 +380,7 @@ public class PtGen {
 			{
 				// Modification de la table des symboles pour modifier le nombre de paramètres d'une procédure
 				EltTabSymb elt = tabSymb[bc - 1];
-				elt.info = it - bc;
+				elt.info = it + 1 - bc;
 				break;
 			}
 
@@ -484,16 +489,21 @@ public class PtGen {
 
 			case 47: // Début bincond du saut des déclarations des procédures vers les instructions principales
 			{
-				po.produire(BINCOND);
-				po.produire(0);
-				pileRep.empiler(po.getIpo());
+				if (!aProcs) {
+					po.produire(BINCOND);
+					po.produire(0);
+					pileRep.empiler(po.getIpo());
+					aProcs = true;
+				}
 				break;
 			}
 
 			case 48: // Fin bincond du saut des déclarations des procédures vers les instructions principales
 			{
-				int ipoBincond = pileRep.depiler();
-				po.modifier(ipoBincond, po.getIpo() + 1);
+				if (aProcs) {
+					int ipoBincond = pileRep.depiler();
+					po.modifier(ipoBincond, po.getIpo() + 1);
+				}
 				break;
 			}
 
@@ -568,6 +578,16 @@ public class PtGen {
 				} else if (tCour == BOOL) {
 					po.produire(ECRBOOL);
 				}
+				break;
+			}
+
+			case 90:  // Sinon
+			{
+				po.produire(BINCOND);
+				po.produire(0);
+				int ipoBsifaux = pileRep.depiler();
+				pileRep.empiler(po.getIpo());
+				po.modifier(ipoBsifaux, po.getIpo() + 1);
 				break;
 			}
 

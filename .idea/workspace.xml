@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="Correction vérification catégorie de variable affectable au point 3.">
+    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="Correction oubli contenul pour parammod.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PtGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PtGen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/projet.g" beforeDir="false" afterPath="$PROJECT_DIR$/src/projet.g" afterDir="false" />
@@ -37,7 +37,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.projet.executor": "Run",
+    "Application.projet.executor": "Debug",
     "git-widget-placeholder": "dev",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -262,7 +262,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711661118988</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Correction oubli contenul pour parammod.">
+      <option name="closed" value="true" />
+      <created>1711662415258</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1711662415258</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,7 +300,8 @@
     <MESSAGE value="Merge 2" />
     <MESSAGE value="Fin du merge." />
     <MESSAGE value="Correction vérification catégorie de variable affectable au point 3." />
-    <option name="LAST_COMMIT_MESSAGE" value="Correction vérification catégorie de variable affectable au point 3." />
+    <MESSAGE value="Correction oubli contenul pour parammod." />
+    <option name="LAST_COMMIT_MESSAGE" value="Correction oubli contenul pour parammod." />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">

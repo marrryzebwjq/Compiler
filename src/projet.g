@@ -74,10 +74,10 @@ type  : 'ent' {PtGen.pt(49);}
   |     'bool' {PtGen.pt(50);}
   ;
   
-decprocs: ({PtGen.pt(47);} decproc ptvg {PtGen.pt(48);})+
+decprocs: ({PtGen.pt(47);} decproc ptvg)+ {PtGen.pt(48);}
   ;
   
-decproc : 'proc' ident {PtGen.pt(6);} parfixe? parmod? consts? vars? corps {PtGen.pt(46);}
+decproc : 'proc' ident {PtGen.pt(6);} parfixe? parmod? {PtGen.pt(9);} consts? vars? corps {PtGen.pt(46);}
   ;
   
 ptvg  : ';'
@@ -113,12 +113,12 @@ instruction
   |
   ;
   
-inssi : 'si' expression {PtGen.pt(98);} 'alors' instructions ('sinon' {PtGen.pt(97);} instructions)? 'fsi' {PtGen.pt(93);}
+inssi : 'si' expression {PtGen.pt(98);} 'alors' instructions ('sinon' {PtGen.pt(90);} instructions)? 'fsi' {PtGen.pt(93);}
   ;
   
 inscond : 'cond' expression {PtGen.pt(91); PtGen.pt(98);} ':' instructions
           ({PtGen.pt(96);} ','  expression {PtGen.pt(98);} ':' instructions)*
-          ({PtGen.pt(96);} 'aut' instructions |  )
+          ({PtGen.pt(96);} 'aut' instructions | {PtGen.pt(93);})
           'fcond' {PtGen.pt(95);}
   ;
   
