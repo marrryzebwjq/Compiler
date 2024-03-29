@@ -1,3 +1,16 @@
+******************** Version 2 du compilateur ************************
+
+Projet incluant :
+
+1. Les corrections de notre V1 :
+_ Correction de la production d'un branchement inconditionnel à la fin d'une condition dans l'instruction cond
+
+2. La compilation des procédures :
+_ A priori tout fonctionne.
+_ Les tests on été faits sur tous les exercices fournis qui contiennnent des procédures.
+
+
+
 ******************** Version 1 du compilateur ************************
 
 Les points de générations qui ont été faits pour cette version
