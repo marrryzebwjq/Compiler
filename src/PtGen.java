@@ -22,7 +22,7 @@
 
 import org.antlr.runtime.Lexer;
 
-import javax.rmi.CORBA.Util;
+//import javax.rmi.CORBA.Util;
 import java.io.*;
 
 /**
@@ -265,7 +265,7 @@ public class PtGen {
 
 			case 1: // A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
 			{
-				if (presentIdent(1) == 0) {
+				if (presentIdent(bc) == 0) {
 					if (bc > 1)
 						placeIdent(UtilLex.numIdCourant, VARLOCALE, tCour, tabSymb[bc - 1].info + 2 + vAdr++);
 					else
@@ -301,7 +301,7 @@ public class PtGen {
 
 			case 4: // Création d'une constante
 			{
-				int ind = presentIdent(1);
+				int ind = presentIdent(bc);
 				if (ind == 0) {
 					placeIdent(UtilLex.numIdCourant, CONSTANTE, tCour, vCour);
 				} else {
