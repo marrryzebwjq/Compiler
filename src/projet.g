@@ -84,7 +84,7 @@ ptvg  : ';'
   | 
   ;
   
-corps : 'debut' instructions 'fin' {PtGen.pt(120);}
+corps : 'debut' instructions 'fin'
   ;
   
 parfixe: 'fixe' '(' pf ( ';' pf)* ')'
