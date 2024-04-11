@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="">
+    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="Ajout TabDef, TabRef">
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024_22_05_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024_22_05__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Descripteur.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Descripteur.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PtGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PtGen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/projet.g" beforeDir="false" afterPath="$PROJECT_DIR$/src/projet.g" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,10 +43,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
+    "WebServerToolWindowFactoryState": "false",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)"
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -112,6 +120,7 @@
       <updated>1710513681076</updated>
       <workItem from="1710513683014" duration="8821000" />
       <workItem from="1711634397797" duration="6108000" />
+      <workItem from="1712833899488" duration="3763000" />
     </task>
     <task id="LOCAL-00001" summary="Commit du changement github à gitlab">
       <created>1710514109382</created>
@@ -264,7 +273,14 @@
       <option name="project" value="LOCAL" />
       <updated>1711662415258</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Ajout fichier édition de lien.">
+      <created>1712821346544</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1712821346544</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,7 +311,8 @@
     <MESSAGE value="Fin du merge." />
     <MESSAGE value="Correction vérification catégorie de variable affectable au point 3." />
     <MESSAGE value="Correction oubli contenul pour parammod." />
-    <option name="LAST_COMMIT_MESSAGE" value="Correction oubli contenul pour parammod." />
+    <MESSAGE value="Ajout fichier édition de lien." />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout fichier édition de lien." />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">

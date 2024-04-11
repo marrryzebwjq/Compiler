@@ -23,6 +23,7 @@
 import org.antlr.runtime.Lexer;
 
 //import javax.rmi.CORBA.Util;
+import javax.rmi.CORBA.Util;
 import java.io.*;
 
 /**
@@ -234,6 +235,7 @@ public class PtGen {
 		pileRep = new TPileRep();
 		// programme objet = code Mapile de l'unite en cours de compilation
 		po = new ProgObjet();
+		po.initvTrans();
 		// COMPILATION SEPAREE: desripteur de l'unite en cours de compilation
 		desc = new Descripteur();
 		
@@ -381,6 +383,16 @@ public class PtGen {
 				// Modification de la table des symboles pour modifier le nombre de paramètres d'une procédure
 				EltTabSymb elt = tabSymb[bc - 1];
 				elt.info = it + 1 - bc;
+
+				// Modification de la table des définitions si présence
+				EltTabSymb fun = tabSymb[bc];
+				String nomFun = UtilLex.chaineIdent(fun.info);
+				int idDef = desc.presentDef(nomFun);
+				if (idDef != 0) {
+					desc.modifDefAdPo(idDef, po.getIpo());
+					desc.modifDefNbParam(idDef, elt.info);
+					// TODO: Vérifier si nbparam = tabsymboles
+				}
 				break;
 			}
 
@@ -470,6 +482,58 @@ public class PtGen {
 				break;
 			}
 
+			case 14: // Initialisation type module
+			{
+				desc.setUnite("module");
+				break;
+			}
+
+			case 15: // Initialisation type programme
+			{
+				desc.setUnite("programme");
+				break;
+			}
+
+			case 16: // Ajout d'un programme def
+			{
+				String ident = UtilLex.chaineIdent(UtilLex.numIdCourant);
+				if (desc.presentDef(ident) != 0) {
+					UtilLex.messErr("Attention !! définition de procédure \"" + ident + "\" déjà déclarée !");
+					break;
+				}
+				desc.ajoutDef(ident);
+				break;
+			}
+
+			case 17: // Ajout d'un programme ref
+			{
+				String ident = UtilLex.chaineIdent(UtilLex.numIdCourant);
+				if (desc.presentRef(ident) != 0) {
+					UtilLex.messErr("Attention !! définition de référence \"" + ident + "\" déjà déclarée !");
+					break;
+				}
+				placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, 0);
+				placeIdent(-1, PRIVEE, NEUTRE, 0);
+				desc.ajoutRef(ident);
+				nbrAdr = 0; // Réinitialisation du comptage des paramètres
+				break;
+			}
+
+			case 18: // Incrémente le nombre de paramètre d'une référence (fixe)
+			{
+				int idDef = desc.getNbRef();
+				desc.modifRefNbParam(idDef, desc.getRefNbParam(idDef) + 1);
+				placeIdent(-1, PARAMFIXE, tCour, nbrAdr++);
+				break;
+			}
+
+			case 19: // Incrémente le nombre de paramètre d'une référence (mod)
+			{
+				int idDef = desc.getNbDef();
+				desc.modifRefNbParam(idDef, desc.getRefNbParam(idDef) + 1);
+				placeIdent(-1, PARAMMOD, tCour, nbrAdr++);
+				break;
+			}
 
 			case 46: // Masquage du code des paramètres à la fin de la déclaration d'une procédure
 			{
@@ -536,26 +600,26 @@ public class PtGen {
 
                     // Erreur -> Lecture dans une constante
                     if (elt.categorie == CONSTANTE) {
-                        UtilLex.messErr("Impossible d'affecter une valeur à une constante !");
-                        break;
-                    }
+						UtilLex.messErr("Impossible d'affecter une valeur à une constante !");
+						break;
+					}
 
-                    // Erreur -> Catégorie non reconnue
+					// Erreur -> Catégorie non reconnue
 					if (elt.categorie != VARGLOBALE && elt.categorie != VARLOCALE && elt.categorie != PARAMMOD) {
 						UtilLex.messErr("Catégorie de variable non reconnue !");
 					}
 
-                    // Lecture en fonction de la type de variable
-                    if (elt.type == ENT) {
-                        po.produire(LIRENT);
-                    } else if (elt.type == BOOL) {
-                        po.produire(LIREBOOL);
-                    }
+					// Lecture en fonction de la type de variable
+					if (elt.type == ENT) {
+						po.produire(LIRENT);
+					} else {
+						po.produire(LIREBOOL);
+					}
 
-                    // Affectation en fonction de la catégorie de la variable
-                    if (elt.categorie == VARGLOBALE) {
-                        po.produire(AFFECTERG);
-                        po.produire(elt.info);
+					// Affectation en fonction de la catégorie de la variable
+					if (elt.categorie == VARGLOBALE) {
+						po.produire(AFFECTERG);
+						po.produire(elt.info);
 					} else if (elt.categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
 						po.produire(elt.info);
@@ -861,10 +925,30 @@ public class PtGen {
 			}
 
 			case 255: {
+				// Fin du code
 				po.produire(ARRET);
 				afftabSymb();  // Affichage de la table des symboles en fin de compilation
+
+				/** Descripteur **/
+				// tailleCode
+				desc.setTailleCode(po.getIpo());
+
+				// tailleGlobaux
+				int nbVarGlob = 0;
+				for (int i = 1; i < tabSymb.length; ++i) {
+					EltTabSymb elt = tabSymb[i];
+					if (elt.categorie == VARGLOBALE) {
+						nbVarGlob++;
+					} else {
+						break;
+					}
+				}
+
+				// écriture du descripteur
+				desc.ecrireDesc(UtilLex.nomSource);
 				po.constGen(); // Ecriture du fichier de mnémoniques
 				po.constObj(); // Ecriture du fichier objet
+				// TODO: Modifications édition de lien?
 				break;
 			}
 
