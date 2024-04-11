@@ -395,7 +395,6 @@ public class PtGen {
 				if (idDef != 0) {
 					desc.modifDefAdPo(idDef, po.getIpo());
 					desc.modifDefNbParam(idDef, elt.info);
-					// TODO: Vérifier si nbparam = tabsymboles
 				}
 				break;
 			}
