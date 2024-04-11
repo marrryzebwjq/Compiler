@@ -22,6 +22,7 @@
 
 import org.antlr.runtime.Lexer;
 
+import javax.rmi.CORBA.Util;
 import java.io.*;
 
 /**
@@ -266,20 +267,22 @@ public class PtGen {
 			case 1: // A chaque ident (nom de variable lu, on l'ajoute à la table des idents si pas déjà présent.)
 			{
 				if (presentIdent(bc) == 0) {
-					if (bc > 1)
+					if (bc > 1) {
 						placeIdent(UtilLex.numIdCourant, VARLOCALE, tCour, tabSymb[bc - 1].info + 2 + vAdr++);
-					else
+					}
+					else {
 						placeIdent(UtilLex.numIdCourant, VARGLOBALE, tCour, vAdr++);
+					}
 					nbrAdr++;
-				} else {    // Si la variable a déjà été déclarée précédemment, message d'erreur !
-					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
+				} else {   // Si la variable a déjà été déclarée précédemment, message d'erreur !
+					UtilLex.messErr("Attention !! \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !!");
 				}
 				break;
 			}
 
 			case 2: // Réserver nbrAdr espaces mémoire.
 			{
-				if (desc.getUnite() == "programme") {
+				if (desc.getUnite().equals("programme")) {
 					po.produire(RESERVER);
 					po.produire(nbrAdr);    // Le nombre de variables lues en global.
 				}
@@ -325,7 +328,7 @@ public class PtGen {
 					if (tabSymb[vAff].categorie == VARGLOBALE) {
 						po.produire(AFFECTERG);
 						po.produire(tabSymb[vAff].info);
-						if (desc.getUnite() == "module") {
+						if (desc.getUnite().equals("module")) {
 							modifVecteurTrans(TRANSDON);
 						}
 					} else if (tabSymb[vAff].categorie == VARLOCALE) {
@@ -347,17 +350,16 @@ public class PtGen {
 			case 6: // Déclarer une procédure
 			{
 				int ind = presentIdent(1);
-				if (ind == 0) {
+				if (ind == 0 || tabSymb[ind].categorie == DEF) {
+					tabSymb[ind].code = -1;
 					placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo() + 1);
 					placeIdent(-1, PRIVEE, NEUTRE, 0);
 					bc = it + 1;
-					vAdr = 0;
-				} else if (tabSymb[ind].categorie == DEF) {
-					tabSymb[ind].categorie = PROC;
-					bc = it + 2;
-					vAdr = 0;
+					vFun = ind; // Pour ajouter une définition
+					if (vFun != 0) desc.modifDefAdPo(vFun, po.getIpo() + 1);
 				} else {
-					UtilLex.messErr("Attention !! procédure \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
+					UtilLex.messErr("Attention !! procédure \"" + UtilLex.chaineIdent(UtilLex.numIdCourant)
+							+ "\" a déjà déclaré précédemment !");
 				}
 				break;
 			}
@@ -368,7 +370,8 @@ public class PtGen {
 				if (ind == 0) {
 					placeIdent(UtilLex.numIdCourant, PARAMFIXE, tCour, it + 1 - bc);
 				} else {
-					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
+					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant)
+							+ "\" a déjà déclaré précédemment !");
 				}
 
 				break;
@@ -380,7 +383,8 @@ public class PtGen {
 				if (ind == 0) {
 					placeIdent(UtilLex.numIdCourant, PARAMMOD, tCour, it + 1 - bc);
 				} else {
-					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
+					UtilLex.messErr("Attention !! paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant)
+							+ "\" a déjà déclaré précédemment !");
 				}
 
 				break;
@@ -391,15 +395,15 @@ public class PtGen {
 				// Modification de la table des symboles pour modifier le nombre de paramètres d'une procédure
 				EltTabSymb elt = tabSymb[bc - 1];
 				elt.info = it + 1 - bc;
-
-				// Modification de la table des définitions si présence
-				EltTabSymb fun = tabSymb[bc];
-				String nomFun = UtilLex.chaineIdent(fun.info);
-				int idDef = desc.presentDef(nomFun);
-				if (idDef != 0) {
-					desc.modifDefAdPo(idDef, po.getIpo());
-					desc.modifDefNbParam(idDef, elt.info);
+				if (vFun != 0) {
+					vFun = desc.presentDef(UtilLex.chaineIdent(vFun));
+					desc.modifDefNbParam(vFun, elt.info);
 				}
+				tabSymb[vFun].code = -1; // Masquage
+
+				// Réinitialisation des variables
+				vFun = 0;
+				nbrAdr = 0;
 				break;
 			}
 
@@ -408,7 +412,9 @@ public class PtGen {
 				// Vérification du type de la variable avec le type de paramètre
                 EltTabSymb elt = tabSymb[vFun + 2 + nbrAdr++];
 				if (elt.type != tCour) {
-					UtilLex.messErr("Attention !! le type passé au paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
+					UtilLex.messErr("Attention !! le type passé au paramètre \""
+							+ UtilLex.chaineIdent(UtilLex.numIdCourant)
+							+ "\" est différente avec la déclaration du type de paramètre !");
 					break;
 				}
 
@@ -440,7 +446,7 @@ public class PtGen {
 					case VARGLOBALE: {
 						po.produire(EMPILERADG);
 						po.produire(var.info);
-						if (desc.getUnite() == "module") {
+						if (desc.getUnite().equals("module")) {
 							modifVecteurTrans(TRANSDON);
 						}
 						break;
@@ -484,7 +490,7 @@ public class PtGen {
 				} else {
 					// Production d'un appel standard
 					po.produire(tabSymb[vFun + 0].info);
-					if (desc.getUnite() == "module") {
+					if (desc.getUnite().equals("module")) {
 						modifVecteurTrans(TRANSCODE);
 					}
 				}
@@ -521,7 +527,7 @@ public class PtGen {
 				break;
 			}
 
-			case 16: // Ajout d'un programme def
+			case 16: // Ajout d'une fonction def
             {
                 String ident = UtilLex.chaineIdent(UtilLex.numIdCourant);
                 if (desc.presentDef(ident) != 0) {
@@ -529,14 +535,13 @@ public class PtGen {
                     break;
                 }
                 placeIdent(UtilLex.numIdCourant, DEF, NEUTRE, 0);
-                placeIdent(-1, PRIVEE, NEUTRE, 0);
                 desc.ajoutDef(ident);
                 int idDef = desc.presentDef(ident);
                 desc.modifRefNbParam(idDef, 0);
                 break;
             }
 
-			case 17: // Ajout d'un programme ref
+			case 17: // Ajout d'une fonction ref
             {
                 String ident = UtilLex.chaineIdent(UtilLex.numIdCourant);
                 if (desc.presentRef(ident) != 0) {
@@ -571,10 +576,18 @@ public class PtGen {
 
             case 20: // Fin du comptage des paramètres d'un ref
             {
-                tabSymb[bc - 1].info = desc.getRefNbParam(desc.getNbRef());
                 bc = 1;
                 break;
             }
+
+			case 21: // Vérifie si toutes les définitions sont déclarés
+			{
+				for (int i = 1; i < desc.getNbDef(); ++i) {
+					if (desc.getDefAdPo(i) == 0) UtilLex.messErr("Attention !! la définition \"" + desc.getDefNomProc(i)
+							+ "\" n'est pas déclarée!");
+				}
+				break;
+			}
 
             case 46: // Masquage du code des paramètres à la fin de la déclaration d'une procédure
             {
@@ -582,10 +595,8 @@ public class PtGen {
                 po.produire(RETOUR);
                 po.produire(tabSymb[bc - 1].info);
 
-                // Les paramètres, les variables et les constantes locales sont entre bc et it.
-                for (int i = bc; i <= it; i++) {
-                    tabSymb[i].code = -1;
-				}
+				// Masquage
+				for (int i = bc; i <= it; i++) tabSymb[i].code = -1;
 
 				// On réinitialise bc.
 				bc = 1;
@@ -594,7 +605,7 @@ public class PtGen {
 
 			case 47: // Début bincond du saut des déclarations des procédures vers les instructions principales
 			{
-				if (!aProcs) {
+				if (!aProcs && desc.getUnite().equals("programme")) {
 					po.produire(BINCOND);
 					po.produire(0);
 					pileRep.empiler(po.getIpo());
@@ -605,7 +616,7 @@ public class PtGen {
 
 			case 48: // Fin bincond du saut des déclarations des procédures vers les instructions principales
 			{
-				if (aProcs) {
+				if (aProcs && desc.getUnite().equals("programme")) {
 					int ipoBincond = pileRep.depiler();
 					po.modifier(ipoBincond, po.getIpo() + 1);
 				}
@@ -661,7 +672,7 @@ public class PtGen {
 					if (elt.categorie == VARGLOBALE) {
 						po.produire(AFFECTERG);
 						po.produire(elt.info);
-						if (desc.getUnite() == "module") {
+						if (desc.getUnite().equals("module")) {
 							modifVecteurTrans(TRANSDON);
 						}
 					} else if (elt.categorie == VARLOCALE) {
@@ -693,7 +704,7 @@ public class PtGen {
 			{
 				po.produire(BINCOND);
 				po.produire(0);
-				if (desc.getUnite() == "module") {
+				if (desc.getUnite().equals("module")) {
 					modifVecteurTrans(TRANSCODE);
 				}
 				int ipoBsifaux = pileRep.depiler();
@@ -725,7 +736,7 @@ public class PtGen {
 			{
 				po.produire(BINCOND);
 				po.produire(0);
-				if (desc.getUnite() == "module") {
+				if (desc.getUnite().equals("module")) {
 					modifVecteurTrans(TRANSCODE);
 				}
 				int ipoBsifaux = pileRep.depiler();
@@ -750,7 +761,7 @@ public class PtGen {
 			{
 				po.produire(BINCOND);
 				po.produire(0);
-				if (desc.getUnite() == "module") {
+				if (desc.getUnite().equals("module")) {
 					modifVecteurTrans(TRANSCODE);
 				}
 				int ipoBsifaux = pileRep.depiler(); // Dépilement du bsifaux pour le modifier en po[bsifaux] = ipo + 1
@@ -773,7 +784,7 @@ public class PtGen {
 				verifBool();
 				po.produire(BSIFAUX);
 				po.produire(0);
-				if (desc.getUnite() == "module") {
+				if (desc.getUnite().equals("module")) {
 					modifVecteurTrans(TRANSCODE);
 				}
 				pileRep.empiler(po.getIpo()); // Empilement de l'indice de l'argument de bsifaux
@@ -814,7 +825,7 @@ public class PtGen {
 					case VARGLOBALE: {
 						po.produire(CONTENUG);
 						po.produire(e.info);
-						if (desc.getUnite() == "module") {
+						if (desc.getUnite().equals("module")) {
 							modifVecteurTrans(TRANSDON);
 						}
 						break;
@@ -984,8 +995,10 @@ public class PtGen {
 			}
 
 			case 255: {
-				// Fin du code
-				po.produire(ARRET);
+				// Fin du programme principal?
+				if (desc.getUnite().equals("programme")) po.produire(ARRET);
+
+				// Affichage de la table des symboles
 				afftabSymb();  // Affichage de la table des symboles en fin de compilation
 
 				/** Descripteur **/

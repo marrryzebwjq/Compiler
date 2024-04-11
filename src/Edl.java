@@ -24,46 +24,38 @@ public class Edl {
 	static Descripteur[] tabDesc = new Descripteur[MAXMOD + 1];
 
 	// table des translations de vecteur
-	private class TransVecElt {
+	static private class TransVecElt {
 		int decDon = 0;
 		int decCode = 0;
 	}
-
-	;
 
 	// tableau des translations
 	static TransVecElt[] tabVec = new TransVecElt[MAXMOD + 1];
 
 	// table des définitions de procédures
-	private class DicoDefElt {
+	static private class DicoDefElt {
 		String nomProc;
 		int adPo = -1;
 		int nbParam = -1;
 	}
 
-	;
-
 	// tableau des translations
 	static DicoDefElt[] tabDef = new DicoDefElt[61];
 
 	// table des références
-	private class TransDefElt {
+	static private class TransDefElt {
 		int nbAd = 0;
 		int[] tabAdr;
 	}
-
-	;
 
 	// tableau des références
 	static TransDefElt[] tabRef = new TransDefElt[MAXMOD + 1];
 
 	// vecteur de translation
-	private class TransExtElt {
+	static private class TransExtElt {
 		int po;
 		int type;
 	}
-
-	;
 
 	// Variables de finalisation
 	static int ipo;   // Nombre code total
@@ -71,7 +63,7 @@ public class Edl {
 	static int nbErr; // Nombre erreurs
 	static int nbDef;
 	static String nomProg;
-	static String[] nomMods = new String[MAXMOD];
+	static String[] nomMods;
 
 	// utilitaire de traitement des erreurs
 	// ------------------------------------
@@ -96,6 +88,7 @@ public class Edl {
 		if (!tabDesc[0].getUnite().equals("programme"))
 			erreur(FATALE, "programme attendu");
 		nomProg = s;
+		nomMods[0] = nomProg;
 
 		nMod = 0;
 		while (!s.equals("") && nMod < MAXMOD) {
@@ -133,7 +126,7 @@ public class Edl {
 		int[] po = new int[(nMod + 1) * MAXOBJ + 1];
 
 		// récupération des objets
-		for (int i = 0; i < nMod; ++i) {
+		for (int i = 0; i <= nMod; ++i) {
 			// Copie des modules dans po
 			InputStream f = Lecture.ouvrir(nomMods[i] + ".obj");
 			if (f == null) {
@@ -146,7 +139,8 @@ public class Edl {
 
 			// Lecture des translations
 			int nbTrans = 0;
-			while (Lecture.finFichier(f) && nbTrans != desc.getNbTransExt()) {
+			while (!Lecture.finFichier(f) && nbTrans != desc.getNbTransExt()) {
+				transTab[nbTrans] = new TransExtElt();
 				transTab[nbTrans].po = Lecture.lireInt(f);
 				transTab[nbTrans].type = Lecture.lireInt(f);
 				++nbTrans;
@@ -154,12 +148,12 @@ public class Edl {
 
 			// Fin de fichier non attendu
 			if (nbTrans != desc.getNbTransExt()) {
-				erreur(FATALE, "Il n'y a pas le même nombre de translations que dans le descripteur dans le " +
+				erreur(FATALE, "Il n'y a pas le même nombre de translations dans le descripteur que dans le " +
 						"fichier \"" + nomMods[i] + ".obj" + "\" !!");
 			}
 
 			// Lecture des po
-			while (Lecture.finFichier(f)) {
+			while (!Lecture.finFichier(f)) {
 				po[ipo++] = Lecture.lireInt(f);
 			}
 
@@ -171,19 +165,19 @@ public class Edl {
 				switch (transTab[k].type) {
 					// Translation de donnée
 					case TRANSDON: {
-						po[transTab[k].po] += tabVec[i].decDon;
+						po[transTab[k].po + tabVec[i].decCode] += tabVec[i].decDon;
 						break;
 					}
 
 					// Translation de code
 					case TRANSCODE: {
-						po[transTab[k].po] += tabVec[i].decCode;
+						po[transTab[k].po + tabVec[i].decCode] += tabVec[i].decCode;
 						break;
 					}
 
 					// Référencement
 					case REFEXT: {
-						po[transTab[k].po] = tabRef[i].tabAdr[transTab[k].po - 1];
+						po[transTab[k].po + tabVec[i].decCode] = tabRef[i].tabAdr[po[transTab[k].po] - 1];
 						break;
 					}
 				}
@@ -193,71 +187,86 @@ public class Edl {
 		// écriture dans le fichier objet
 		for (int i = 1; i < ipo; ++i) {
 			Ecriture.ecrireInt(f2, po[i]);
+			Ecriture.ecrireStringln(f2);
 		}
 
 		// fermeture
 		Ecriture.fermer(f2);
 
 		// creation du fichier en mnemonique correspondant
-		Mnemo.creerFichier(ipo, po, nomProg + ".ima");
+		Mnemo.creerFichier(ipo - 1, po, nomProg + ".ima");
 	}
 
 	public static void main(String argv[]) {
 		System.out.println("EDITEUR DE LIENS / PROJET LICENCE");
 		System.out.println("---------------------------------");
 		System.out.println("");
+
+		// Initialisation
+		tabDesc = new Descripteur[MAXMOD + 1];
+		tabVec = new TransVecElt[MAXMOD + 1];
+		tabDef = new DicoDefElt[61];
+		tabRef = new TransDefElt[MAXMOD + 1];
 		ipo = 1;
-		nbDef = 1;
+		nMod = 0;
 		nbErr = 0;
+		nbDef = 0;
+		nomMods = new String[MAXMOD];
 
 		// Phase 1 de l'edition de liens
 		// -----------------------------
 		lireDescripteurs();
 
 		// trans + dico
-		for (int i = 0; i < nMod; ++i) {
+		tabVec[0] = new TransVecElt();
+		tabVec[0].decDon = 0;
+		tabVec[0].decCode = 0;
+		for (int i = 0; i <= nMod; ++i) {
 			// Remplissage de la table des translations
 			if (i > 0) {
+				tabVec[i] = new TransVecElt();
 				tabVec[i].decDon = tabVec[i - 1].decDon + tabDesc[i - 1].getTailleGlobaux();
 				tabVec[i].decCode = tabVec[i - 1].decCode + tabDesc[i - 1].getTailleCode();
 			}
 
 			// Remplissage de la table des définitions
-			for (int j = 0; j < nMod; ++j) {
-				Descripteur desc = tabDesc[j];
-				for (int k = 0; k < desc.getNbDef(); ++k) {
-					if (presentDef(desc.getDefNomProc(k)) != 0) {
-						erreur(NONFATALE, "La procédure \"" + desc.getDefNomProc(k) + "\" a déjà été définie!");
-						nbErr++;
-					} else {
-						tabDef[k].nomProc = desc.getDefNomProc(k);
-						tabDef[k].adPo = desc.getDefAdPo(k) + tabVec[j].decCode;
-						tabDef[k].nbParam = desc.getDefNbParam(k);
-					}
+			Descripteur desc = tabDesc[i];
+			for (int k = 1; k <= desc.getNbDef(); ++k) {
+				if (presentDef(desc.getDefNomProc(k)) != 0) {
+					erreur(NONFATALE, "La procédure \"" + desc.getDefNomProc(k) + "\" a déjà été définie!");
+					nbErr++;
+				} else {
+					tabDef[nbDef + 1] = new DicoDefElt();
+					tabDef[nbDef + 1].nomProc = desc.getDefNomProc(k);
+					tabDef[nbDef + 1].adPo = desc.getDefAdPo(k) + tabVec[i].decCode;
+					tabDef[nbDef + 1].nbParam = desc.getDefNbParam(k);
+					nbDef++;
 				}
 			}
 		}
 
 		// adFinale
-		for (int i = 0; i < nMod; ++i) {
+		for (int i = 0; i <= nMod; ++i) {
 			Descripteur desc = tabDesc[i];
+			tabRef[i] = new TransDefElt();
 			tabRef[i].nbAd = desc.getNbRef();
 			tabRef[i].tabAdr = new int[tabRef[i].nbAd];
 
-			for (int k = 0; k < desc.getNbRef(); ++k) {
+			// Association références
+			for (int k = 1; k <= desc.getNbRef(); ++k) {
 				String nomRef = desc.getRefNomProc(k);
 				int idDef = presentDef(nomRef);
 				if (idDef == 0) {
-					erreur(NONFATALE, "La procédure \"" + nomRef + " n'est définie dans aucun module!");
+					erreur(NONFATALE, "La procédure \"" + nomRef + "\" n'est définie dans aucun module!");
 					nbErr++;
 				} else {
 					if (desc.getRefNbParam(k) != tabDef[idDef].nbParam) {
-						erreur(NONFATALE, "La référence \"" + nomRef + " n'a pas le même nombre de paramètres (" +
+						erreur(NONFATALE, "La référence \"" + nomRef + "\" n'a pas le même nombre de paramètres (" +
 								desc.getRefNbParam(k) + " ) avec la définition trouvée (" + tabDef[idDef].nbParam +
 								") !!");
 						nbErr++;
 					}
-					tabRef[i].tabAdr[k] = tabDef[idDef].adPo;
+					tabRef[i].tabAdr[k - 1] = tabDef[idDef].adPo;
 				}
 			}
 
