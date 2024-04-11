@@ -85,6 +85,7 @@ public class Descripteur {
 	 * @param s : "module" ou bien "programme"
 	 */
 	public void setUnite(String s) {
+		assert (s.equals("module") || s.equals("programme"));
 		unite = s;
 	}
 	
