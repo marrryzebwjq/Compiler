@@ -352,6 +352,10 @@ public class PtGen {
 					placeIdent(-1, PRIVEE, NEUTRE, 0);
 					bc = it + 1;
 					vAdr = 0;
+				} else if (tabSymb[ind].categorie == DEF) {
+					tabSymb[ind].categorie = PROC;
+					bc = it + 2;
+					vAdr = 0;
 				} else {
 					UtilLex.messErr("Attention !! procédure \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" a déjà déclaré précédemment !");
 				}
@@ -529,7 +533,6 @@ public class PtGen {
                 desc.ajoutDef(ident);
                 int idDef = desc.presentDef(ident);
                 desc.modifRefNbParam(idDef, 0);
-                bc = it + 1;
                 break;
             }
 
