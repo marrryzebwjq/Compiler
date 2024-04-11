@@ -39,7 +39,7 @@ unite : unitprog {PtGen.pt(255);} EOF
   ;
   
 unitprog
-  : 'programme' {PtGen.pt(14);} ident ':'
+  : 'programme' {PtGen.pt(15);} ident ':'
      declarations  
      corps { System.out.println("succes, arret de la compilation"); }
   ;
@@ -57,7 +57,7 @@ partiedef
   : 'def' ident {PtGen.pt(16);} (',' ident {PtGen.pt(16);})* ptvg
   ;
   
-partieref: 'ref'  specif (',' specif)* ptvg
+partieref: 'ref'  specif (',' specif)* ptvg {PtGen.pt(20);}
   ;
   
 specif  : ident {PtGen.pt(17);} ( 'fixe' '(' type {PtGen.pt(18);}  ( ',' type {PtGen.pt(18);}  )* ')' )?
@@ -132,8 +132,8 @@ ecriture: 'ecrire' '(' expression {PtGen.pt(52);} ( ',' expression {PtGen.pt(52)
    ;
   
 affouappel
-  : ident {PtGen.pt(13);} ( {PtGen.pt(3);}   ':=' expression {PtGen.pt(5);}
-            |   (effixes (effmods)?)? {PtGen.pt(12);}
+  : ident  ( {PtGen.pt(3);}   ':=' expression {PtGen.pt(5);}
+            | {PtGen.pt(13);}  (effixes (effmods)?)? {PtGen.pt(12);}
            )
   ;
   

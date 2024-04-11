@@ -22,8 +22,6 @@
 
 import org.antlr.runtime.Lexer;
 
-//import javax.rmi.CORBA.Util;
-import javax.rmi.CORBA.Util;
 import java.io.*;
 
 /**
@@ -402,10 +400,10 @@ public class PtGen {
 				break;
 			}
 
-			case 10: // Vérification si type de paramètre fixe est correcte par rapport à la table des symboles
+			case 10: // Vérification si type de paramètre fixe est correct par rapport à la table des symboles
 			{
 				// Vérification du type de la variable avec le type de paramètre
-				EltTabSymb elt = tabSymb[bc + nbrAdr++];
+                EltTabSymb elt = tabSymb[vFun + 2 + nbrAdr++];
 				if (elt.type != tCour) {
 					UtilLex.messErr("Attention !! le type passé au paramètre \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
 					break;
@@ -428,10 +426,11 @@ public class PtGen {
 				tCour = var.type;
 
 				// Vérification du type de la variable
-				EltTabSymb arg = tabSymb[bc + nbrAdr++];
+                EltTabSymb arg = tabSymb[vFun + 2 + nbrAdr++];
 				if (arg.type != tCour) {
-					UtilLex.messErr("Attention !! le type du paramètre  \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
-				}
+                    UtilLex.messErr("Attention !! le type passé au paramètre  \"" + UtilLex.chaineIdent(UtilLex.numIdCourant) + "\" est différente avec la déclaration du type de paramètre !");
+                    break;
+                }
 
 				// Récupération du contenu de la variable
 				switch (var.categorie) {
@@ -520,56 +519,70 @@ public class PtGen {
 			}
 
 			case 16: // Ajout d'un programme def
-			{
-				String ident = UtilLex.chaineIdent(UtilLex.numIdCourant);
-				if (desc.presentDef(ident) != 0) {
-					UtilLex.messErr("Attention !! définition de procédure \"" + ident + "\" déjà déclarée !");
-					break;
-				}
-				desc.ajoutDef(ident);
-				break;
-			}
+            {
+                String ident = UtilLex.chaineIdent(UtilLex.numIdCourant);
+                if (desc.presentDef(ident) != 0) {
+                    UtilLex.messErr("Attention !! définition de procédure \"" + ident + "\" déjà déclarée !");
+                    break;
+                }
+                placeIdent(UtilLex.numIdCourant, DEF, NEUTRE, 0);
+                placeIdent(-1, PRIVEE, NEUTRE, 0);
+                desc.ajoutDef(ident);
+                int idDef = desc.presentDef(ident);
+                desc.modifRefNbParam(idDef, 0);
+                bc = it + 1;
+                break;
+            }
 
 			case 17: // Ajout d'un programme ref
-			{
-				String ident = UtilLex.chaineIdent(UtilLex.numIdCourant);
-				if (desc.presentRef(ident) != 0) {
-					UtilLex.messErr("Attention !! définition de référence \"" + ident + "\" déjà déclarée !");
-					break;
-				}
-				placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, 0);
-				placeIdent(-1, PRIVEE, NEUTRE, 0);
-				desc.ajoutRef(ident);
-
-				nbrAdr = 0; // Réinitialisation du comptage des paramètres
-				break;
-			}
+            {
+                String ident = UtilLex.chaineIdent(UtilLex.numIdCourant);
+                if (desc.presentRef(ident) != 0) {
+                    UtilLex.messErr("Attention !! définition de référence \"" + ident + "\" déjà déclarée !");
+                    break;
+                }
+                placeIdent(UtilLex.numIdCourant, REF, NEUTRE, 0);
+                placeIdent(-1, PRIVEE, NEUTRE, 0);
+                desc.ajoutRef(ident);
+                int idRef = desc.presentRef(ident);
+                desc.modifRefNbParam(idRef, 0);
+                bc = it + 1;
+                nbrAdr = 0; // Réinitialisation du comptage des paramètres
+                break;
+            }
 
 			case 18: // Incrémente le nombre de paramètre d'une référence (fixe)
-			{
-				int idDef = desc.getNbRef();
-				desc.modifRefNbParam(idDef, desc.getRefNbParam(idDef) + 1);
-				placeIdent(-1, PARAMFIXE, tCour, nbrAdr++);
-				break;
-			}
+            {
+                int idRef = desc.getNbRef();
+                desc.modifRefNbParam(idRef, desc.getRefNbParam(idRef) + 1);
+                placeIdent(-1, PARAMFIXE, tCour, nbrAdr++);
+                break;
+            }
 
-			case 19: // Incrémente le nombre de paramètre d'une référence (mod)
-			{
-				int idDef = desc.getNbDef();
-				desc.modifRefNbParam(idDef, desc.getRefNbParam(idDef) + 1);
-				placeIdent(-1, PARAMMOD, tCour, nbrAdr++);
-				break;
-			}
+            case 19: // Incrémente le nombre de paramètre d'une référence (mod)
+            {
+                int idRef = desc.getNbRef();
+                desc.modifRefNbParam(idRef, desc.getRefNbParam(idRef) + 1);
+                placeIdent(-1, PARAMMOD, tCour, nbrAdr++);
+                break;
+            }
 
-			case 46: // Masquage du code des paramètres à la fin de la déclaration d'une procédure
-			{
-				// On produit retour
-				po.produire(RETOUR);
-				po.produire(tabSymb[bc - 1].info);
+            case 20: // Réinitialisation à bc = 1 lorsque fin de déclaration des références
+            {
+                tabSymb[bc - 1].info = desc.getRefNbParam(desc.getNbRef());
+                bc = 1;
+                break;
+            }
 
-				// Les paramètres, les variables et les constantes locales sont entre bc et it.
-				for (int i = bc; i <= it; i++) {
-					tabSymb[i].code = -1;
+            case 46: // Masquage du code des paramètres à la fin de la déclaration d'une procédure
+            {
+                // On produit retour
+                po.produire(RETOUR);
+                po.produire(tabSymb[bc - 1].info);
+
+                // Les paramètres, les variables et les constantes locales sont entre bc et it.
+                for (int i = bc; i <= it; i++) {
+                    tabSymb[i].code = -1;
 				}
 
 				// On réinitialise bc.
