@@ -567,7 +567,7 @@ public class PtGen {
                 break;
             }
 
-            case 20: // Réinitialisation à bc = 1 lorsque fin de déclaration des références
+            case 20: // Fin du comptage des paramètres d'un ref
             {
                 tabSymb[bc - 1].info = desc.getRefNbParam(desc.getNbRef());
                 bc = 1;
