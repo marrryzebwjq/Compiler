@@ -281,8 +281,11 @@ public class PtGen {
 
 			case 2: // Réserver nbrAdr espaces mémoire.
 			{
-				po.produire(RESERVER);
-				po.produire(nbrAdr);        // Le nombre de variables lues en global.
+				if (desc.getUnite() == "programme") {
+					po.produire(RESERVER);
+					po.produire(nbrAdr);    // Le nombre de variables lues en global.
+				}
+				desc.setTailleGlobaux(nbrAdr);
 				nbrAdr = 0;                 // On réinitialise pour la prochaine reconnaissance.
 				break;
 			}
@@ -324,6 +327,9 @@ public class PtGen {
 					if (tabSymb[vAff].categorie == VARGLOBALE) {
 						po.produire(AFFECTERG);
 						po.produire(tabSymb[vAff].info);
+						if (desc.getUnite() == "module") {
+							modifVecteurTrans(TRANSDON);
+						}
 					} else if (tabSymb[vAff].categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
 						po.produire(tabSymb[vAff].info);
@@ -432,6 +438,9 @@ public class PtGen {
 					case VARGLOBALE: {
 						po.produire(EMPILERADG);
 						po.produire(var.info);
+						if (desc.getUnite() == "module") {
+							modifVecteurTrans(TRANSDON);
+						}
 						break;
 					}
 
@@ -462,7 +471,23 @@ public class PtGen {
 			{
 				// Production de l'appel
 				po.produire(APPEL);
-				po.produire(tabSymb[vFun + 0].info);
+
+				// La fonction est elle une référence?
+				String nomFun = UtilLex.chaineIdent(tabSymb[vFun].code);
+				int idRef = desc.presentRef(nomFun);
+				if (idRef != 0) {
+					// Production d'un appel en fonction de tabRef
+					po.produire(idRef);
+					modifVecteurTrans(REFEXT);
+				} else {
+					// Production d'un appel standard
+					po.produire(tabSymb[vFun + 0].info);
+					if (desc.getUnite() == "module") {
+						modifVecteurTrans(TRANSCODE);
+					}
+				}
+
+				// Production du nombre de paramètres
 				po.produire(tabSymb[vFun + 1].info);
 
 				// Réinitialisation des variables de contrôle
@@ -515,6 +540,7 @@ public class PtGen {
 				placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, 0);
 				placeIdent(-1, PRIVEE, NEUTRE, 0);
 				desc.ajoutRef(ident);
+
 				nbrAdr = 0; // Réinitialisation du comptage des paramètres
 				break;
 			}
@@ -620,6 +646,9 @@ public class PtGen {
 					if (elt.categorie == VARGLOBALE) {
 						po.produire(AFFECTERG);
 						po.produire(elt.info);
+						if (desc.getUnite() == "module") {
+							modifVecteurTrans(TRANSDON);
+						}
 					} else if (elt.categorie == VARLOCALE) {
 						po.produire(AFFECTERL);
 						po.produire(elt.info);
@@ -649,6 +678,9 @@ public class PtGen {
 			{
 				po.produire(BINCOND);
 				po.produire(0);
+				if (desc.getUnite() == "module") {
+					modifVecteurTrans(TRANSCODE);
+				}
 				int ipoBsifaux = pileRep.depiler();
 				pileRep.empiler(po.getIpo());
 				po.modifier(ipoBsifaux, po.getIpo() + 1);
@@ -678,6 +710,9 @@ public class PtGen {
 			{
 				po.produire(BINCOND);
 				po.produire(0);
+				if (desc.getUnite() == "module") {
+					modifVecteurTrans(TRANSCODE);
+				}
 				int ipoBsifaux = pileRep.depiler();
 				po.modifier(ipoBsifaux, po.getIpo() + 1);
 				int ipoDebutWhile = pileRep.depiler();
@@ -700,6 +735,9 @@ public class PtGen {
 			{
 				po.produire(BINCOND);
 				po.produire(0);
+				if (desc.getUnite() == "module") {
+					modifVecteurTrans(TRANSCODE);
+				}
 				int ipoBsifaux = pileRep.depiler(); // Dépilement du bsifaux pour le modifier en po[bsifaux] = ipo + 1
 				po.modifier(ipoBsifaux, po.getIpo() + 1);
 				int ipoBincond = pileRep.depiler(); // Dépilement du bincond pour le chaînage en po[bincond(i)] = bincond(i-1)
@@ -720,6 +758,9 @@ public class PtGen {
 				verifBool();
 				po.produire(BSIFAUX);
 				po.produire(0);
+				if (desc.getUnite() == "module") {
+					modifVecteurTrans(TRANSCODE);
+				}
 				pileRep.empiler(po.getIpo()); // Empilement de l'indice de l'argument de bsifaux
 				break;
 			}
@@ -758,6 +799,9 @@ public class PtGen {
 					case VARGLOBALE: {
 						po.produire(CONTENUG);
 						po.produire(e.info);
+						if (desc.getUnite() == "module") {
+							modifVecteurTrans(TRANSDON);
+						}
 						break;
 					}
 
@@ -948,7 +992,6 @@ public class PtGen {
 				desc.ecrireDesc(UtilLex.nomSource);
 				po.constGen(); // Ecriture du fichier de mnémoniques
 				po.constObj(); // Ecriture du fichier objet
-				// TODO: Modifications édition de lien?
 				break;
 			}
 
