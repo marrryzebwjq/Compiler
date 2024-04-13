@@ -21,7 +21,7 @@ public class Edl {
 	private static final int TRANSDON = 1, TRANSCODE = 2, REFEXT = 3;
 
 	// table de tous les descripteurs concernes par l'edl
-	static Descripteur[] tabDesc = new Descripteur[MAXMOD + 1];
+	static Descripteur[] tabDesc;
 
 	// table des translations de vecteur
 	static private class TransVecElt {
@@ -30,7 +30,7 @@ public class Edl {
 	}
 
 	// tableau des translations
-	static TransVecElt[] tabVec = new TransVecElt[MAXMOD + 1];
+	static TransVecElt[] tabVec;
 
 	// table des définitions de procédures
 	static private class DicoDefElt {
@@ -40,7 +40,7 @@ public class Edl {
 	}
 
 	// tableau des translations
-	static DicoDefElt[] tabDef = new DicoDefElt[61];
+	static DicoDefElt[] tabDef;
 
 	// table des références
 	static private class TransDefElt {
@@ -49,7 +49,7 @@ public class Edl {
 	}
 
 	// tableau des références
-	static TransDefElt[] tabRef = new TransDefElt[MAXMOD + 1];
+	static TransDefElt[] tabRef;
 
 	// vecteur de translation
 	static private class TransExtElt {
@@ -211,7 +211,7 @@ public class Edl {
 		nMod = 0;
 		nbErr = 0;
 		nbDef = 0;
-		nomUnites = new String[MAXMOD];
+		nomUnites = new String[MAXMOD + 1];
 
 		// Phase 1 de l'edition de liens
 		// -----------------------------
