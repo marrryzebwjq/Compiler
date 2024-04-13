@@ -63,7 +63,7 @@ public class Edl {
 	static int nbErr; // Nombre erreurs
 	static int nbDef;
 	static String nomProg;
-	static String[] nomMods;
+	static String[] nomUnites;
 
 	// utilitaire de traitement des erreurs
 	// ------------------------------------
@@ -88,7 +88,7 @@ public class Edl {
 		if (!tabDesc[0].getUnite().equals("programme"))
 			erreur(FATALE, "programme attendu");
 		nomProg = s;
-		nomMods[0] = nomProg;
+		nomUnites[0] = nomProg;
 
 		nMod = 0;
 		while (!s.equals("") && nMod < MAXMOD) {
@@ -99,7 +99,7 @@ public class Edl {
 				nMod = nMod + 1;
 				tabDesc[nMod] = new Descripteur();
 				tabDesc[nMod].lireDesc(s);
-				nomMods[nMod] = s;
+				nomUnites[nMod] = s;
 
 				if (!tabDesc[nMod].getUnite().equals("module"))
 					erreur(FATALE, "module attendu");
@@ -128,9 +128,9 @@ public class Edl {
 		// récupération des objets
 		for (int i = 0; i <= nMod; ++i) {
 			// Copie des modules dans po
-			InputStream f = Lecture.ouvrir(nomMods[i] + ".obj");
+			InputStream f = Lecture.ouvrir(nomUnites[i] + ".obj");
 			if (f == null) {
-				erreur(FATALE, "Fichier \"" + nomMods[i] + ".obj\" n'éxiste pas!!");
+				erreur(FATALE, "Fichier \"" + nomUnites[i] + ".obj\" n'éxiste pas!!");
 			}
 
 			// Récupération des transExt
@@ -149,7 +149,7 @@ public class Edl {
 			// Fin de fichier non attendu
 			if (nbTrans != desc.getNbTransExt()) {
 				erreur(FATALE, "Il n'y a pas le même nombre de translations dans le descripteur que dans le " +
-						"fichier \"" + nomMods[i] + ".obj" + "\" !!");
+						"fichier \"" + nomUnites[i] + ".obj" + "\" !!");
 			}
 
 			// Lecture des po
@@ -211,7 +211,7 @@ public class Edl {
 		nMod = 0;
 		nbErr = 0;
 		nbDef = 0;
-		nomMods = new String[MAXMOD];
+		nomUnites = new String[MAXMOD];
 
 		// Phase 1 de l'edition de liens
 		// -----------------------------
@@ -222,6 +222,21 @@ public class Edl {
 		tabVec[0].decDon = 0;
 		tabVec[0].decCode = 0;
 		for (int i = 0; i <= nMod; ++i) {
+			// Récupération de la table des définitions
+			Descripteur desc = tabDesc[i];
+
+			// Vérifie si le nombre de références et dé définitions par unité n'excède pas MAXREF et MAXDEF
+			if (desc.getNbDef() > MAXDEF) {
+				erreur(NONFATALE, "L'unité \"" + nomUnites[i]
+						+ "\" a plus de définitions que supporté : (" + desc.getNbDef() + " > " + MAXDEF + ") !!");
+				nbErr++;
+			}
+			if (desc.getNbRef() > MAXREF) {
+				erreur(NONFATALE, "L'unité \"" + nomUnites[i]
+						+ "\" a plus de définitions que supporté : (" + desc.getNbRef() + " > " + MAXREF + ") !!");
+				nbErr++;
+			}
+
 			// Remplissage de la table des translations
 			if (i > 0) {
 				tabVec[i] = new TransVecElt();
@@ -230,7 +245,6 @@ public class Edl {
 			}
 
 			// Remplissage de la table des définitions
-			Descripteur desc = tabDesc[i];
 			for (int k = 1; k <= desc.getNbDef(); ++k) {
 				if (presentDef(desc.getDefNomProc(k)) != 0) {
 					erreur(NONFATALE, "La procédure \"" + desc.getDefNomProc(k) + "\" a déjà été définie!");
