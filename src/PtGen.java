@@ -351,7 +351,7 @@ public class PtGen {
 			{
 				int ind = presentIdent(1);
 				if (ind == 0 || tabSymb[ind].categorie == DEF) {
-					tabSymb[ind].code = -1;
+					if (ind != 0) tabSymb[ind].code = -1;
 					placeIdent(UtilLex.numIdCourant, PROC, NEUTRE, po.getIpo() + 1);
 					placeIdent(-1, PRIVEE, NEUTRE, 0);
 					bc = it + 1;
@@ -396,10 +396,10 @@ public class PtGen {
 				EltTabSymb elt = tabSymb[bc - 1];
 				elt.info = it + 1 - bc;
 				if (vFun != 0) {
+					tabSymb[vFun].code = -1; // Masquage
 					vFun = desc.presentDef(UtilLex.chaineIdent(vFun));
 					desc.modifDefNbParam(vFun, elt.info);
 				}
-				tabSymb[vFun].code = -1; // Masquage
 
 				// Réinitialisation des variables
 				vFun = 0;

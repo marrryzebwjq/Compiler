@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="Correction bug masquage et définition des procédures.&#10;Finalisation de la première version des éditions de liens (semble fonctionnelle)">
+    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="Correction de l'allocation des tableaux (MOD + 1 car Programmes + Modules).">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Edl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Edl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PtGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PtGen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,39 +30,39 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2djFerqY2opBwdO0eKpVMlU1Szh" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Edl.executor": "Debug",
-    "Application.projet.executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "dev",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Documents/Université/Informatique/L3/Sem6/CMPL/Projet_CMPL",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Edl.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.projet.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Documents/Université/Informatique/L3/Sem6/CMPL/Projet_CMPL&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="H:\Documents\CMPL\Projet_CMPL\tests" />
       <recent name="H:\Documents\CMPL\Projet_CMPL\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Edl">
+  <component name="RunManager" selected="Application.projet">
     <configuration name="Edl" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Edl" />
       <module name="Projet_CMPL" />
@@ -106,8 +106,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Edl" />
         <item itemvalue="Application.projet" />
+        <item itemvalue="Application.Edl" />
         <item itemvalue="Application.Mapile" />
         <item itemvalue="Gradle.H:/Documents/CMPL/Projet_CMPL" />
       </list>
@@ -132,7 +132,8 @@
       <workItem from="1710513683014" duration="8821000" />
       <workItem from="1711634397797" duration="6108000" />
       <workItem from="1712833899488" duration="3763000" />
-      <workItem from="1713027479420" duration="914000" />
+      <workItem from="1713027479420" duration="1283000" />
+      <workItem from="1713129579626" duration="280000" />
     </task>
     <task id="LOCAL-00001" summary="Commit du changement github à gitlab">
       <created>1710514109382</created>
@@ -300,7 +301,23 @@
       <option name="project" value="LOCAL" />
       <updated>1712878865323</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Ajout limite des définitions et références comme spécifié dans le cahier des charges pour l'éditeur de lien.">
+      <option name="closed" value="true" />
+      <created>1713029964905</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1713029964905</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Correction de l'allocation des tableaux (MOD + 1 car Programmes + Modules).">
+      <option name="closed" value="true" />
+      <created>1713030259273</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1713030259273</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -334,7 +351,9 @@
     <MESSAGE value="Correction oubli contenul pour parammod." />
     <MESSAGE value="Ajout fichier édition de lien." />
     <MESSAGE value="Correction bug masquage et définition des procédures.&#10;Finalisation de la première version des éditions de liens (semble fonctionnelle)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Correction bug masquage et définition des procédures.&#10;Finalisation de la première version des éditions de liens (semble fonctionnelle)" />
+    <MESSAGE value="Ajout limite des définitions et références comme spécifié dans le cahier des charges pour l'éditeur de lien." />
+    <MESSAGE value="Correction de l'allocation des tableaux (MOD + 1 car Programmes + Modules)." />
+    <option name="LAST_COMMIT_MESSAGE" value="Correction de l'allocation des tableaux (MOD + 1 car Programmes + Modules)." />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
