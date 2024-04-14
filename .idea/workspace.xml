@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="Correction de l'allocation des tableaux (MOD + 1 car Programmes + Modules).">
+    <list default="true" id="aa7bedde-3395-4e32-bd0b-349e83d665a2" name="Changes" comment="Correction vFun dans def.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PtGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PtGen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poly/polyP36-exo8.gen" beforeDir="false" afterPath="$PROJECT_DIR$/poly/polyP36-exo8.gen" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poly/polyP36-exo8.obj" beforeDir="false" afterPath="$PROJECT_DIR$/poly/polyP36-exo8.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Edl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Edl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +135,7 @@
       <workItem from="1711634397797" duration="6108000" />
       <workItem from="1712833899488" duration="3763000" />
       <workItem from="1713027479420" duration="1283000" />
-      <workItem from="1713129579626" duration="280000" />
+      <workItem from="1713129579626" duration="2431000" />
     </task>
     <task id="LOCAL-00001" summary="Commit du changement github à gitlab">
       <created>1710514109382</created>
@@ -317,7 +319,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713030259273</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Correction vFun dans def.">
+      <option name="closed" value="true" />
+      <created>1713129954529</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1713129954529</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -328,7 +338,6 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.obj" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Commit du changement github à gitlab" />
     <MESSAGE value="Commit merge général" />
     <MESSAGE value="Commit expressions depuis version github" />
     <MESSAGE value="Correction réservation des variables (!= -&gt; ==)" />
@@ -353,7 +362,8 @@
     <MESSAGE value="Correction bug masquage et définition des procédures.&#10;Finalisation de la première version des éditions de liens (semble fonctionnelle)" />
     <MESSAGE value="Ajout limite des définitions et références comme spécifié dans le cahier des charges pour l'éditeur de lien." />
     <MESSAGE value="Correction de l'allocation des tableaux (MOD + 1 car Programmes + Modules)." />
-    <option name="LAST_COMMIT_MESSAGE" value="Correction de l'allocation des tableaux (MOD + 1 car Programmes + Modules)." />
+    <MESSAGE value="Correction vFun dans def." />
+    <option name="LAST_COMMIT_MESSAGE" value="Correction vFun dans def." />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">

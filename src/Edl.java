@@ -190,6 +190,13 @@ public class Edl {
 			Ecriture.ecrireStringln(f2);
 		}
 
+        // modification nombre de variables globales
+        int numGlobals = 0;
+        for (int i = 0; i <= nMod; ++i) {
+            numGlobals += tabDesc[i].getTailleGlobaux();
+        }
+        po[2] = numGlobals;
+
 		// fermeture
 		Ecriture.fermer(f2);
 
