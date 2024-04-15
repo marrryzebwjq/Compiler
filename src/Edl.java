@@ -184,18 +184,14 @@ public class Edl {
 			}
 		}
 
+		// modification nombre de variables globales
+		po[2] = tabVec[nMod].decDon + tabDesc[nMod].getTailleGlobaux();
+
 		// écriture dans le fichier objet
 		for (int i = 1; i < ipo; ++i) {
 			Ecriture.ecrireInt(f2, po[i]);
 			Ecriture.ecrireStringln(f2);
 		}
-
-        // modification nombre de variables globales
-        int numGlobals = 0;
-        for (int i = 0; i <= nMod; ++i) {
-            numGlobals += tabDesc[i].getTailleGlobaux();
-        }
-        po[2] = numGlobals;
 
 		// fermeture
 		Ecriture.fermer(f2);
