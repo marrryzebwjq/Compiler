@@ -477,18 +477,32 @@ public class PtGen {
 
 			case 12: // Fin de l'appel de la fonction
 			{
+				// Récupération du nom de la fonction
+				String nomFun = UtilLex.chaineIdent(tabSymb[vFun].code);
+
+				// Nombre de paramètres = nombre d'arguments?
+
+
 				// Production de l'appel
-				po.produire(APPEL);
 
 				// La fonction est elle une référence?
-				String nomFun = UtilLex.chaineIdent(tabSymb[vFun].code);
 				int idRef = desc.presentRef(nomFun);
 				if (idRef != 0) {
 					// Production d'un appel en fonction de tabRef
+					if (desc.getRefNbParam(idRef) != nbrAdr) {
+						UtilLex.messErr("Erreur !! Le nombre de paramètres passés à la référence \"" + nomFun + "\" ne sont pas égaux !!" +
+								" -> (" + nbrAdr + ") arguments =/= (" + desc.getRefNbParam(idRef) + ") paramètres !!");
+					}
+					po.produire(APPEL);
 					po.produire(idRef);
 					modifVecteurTrans(REFEXT);
 				} else {
 					// Production d'un appel standard
+					if (tabSymb[vFun + 1].info != nbrAdr) {
+						UtilLex.messErr("Erreur !! Le nombre de paramètres passés à la procédure \"" + nomFun + "\" ne sont pas égaux !!" +
+								" -> (" + nbrAdr + ") arguments =/= (" + tabSymb[vFun + 1].info + ") paramètres !!");
+					}
+					po.produire(APPEL);
 					po.produire(tabSymb[vFun + 0].info);
 					if (desc.getUnite().equals("module")) {
 						modifVecteurTrans(TRANSCODE);
@@ -563,22 +577,22 @@ public class PtGen {
 
 			case 18: // Incrémente le nombre de paramètre d'une référence (fixe)
             {
-                int idRef = desc.getNbRef();
-                desc.modifRefNbParam(idRef, desc.getRefNbParam(idRef) + 1);
                 placeIdent(-1, PARAMFIXE, tCour, nbrAdr++);
                 break;
             }
 
             case 19: // Incrémente le nombre de paramètre d'une référence (mod)
             {
-                int idRef = desc.getNbRef();
-                desc.modifRefNbParam(idRef, desc.getRefNbParam(idRef) + 1);
                 placeIdent(-1, PARAMMOD, tCour, nbrAdr++);
                 break;
             }
 
             case 20: // Fin du comptage des paramètres d'un ref
             {
+				int idRef = desc.getNbRef();
+				desc.modifRefNbParam(idRef, nbrAdr);
+				tabSymb[bc - 1].info = nbrAdr;
+				nbrAdr = 0;
                 bc = 1;
                 break;
             }
