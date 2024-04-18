@@ -4,7 +4,7 @@
 _ Appel de procédures : vérifications de type et catégorie sur les paramètres sur les mauvais indices à cause de bc.
 
 2. Editions de liens 
-
+_ A priori, tout fonctionne.
 
 
 ******************** Version 2 du compilateur ************************
