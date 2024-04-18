@@ -232,12 +232,10 @@ public class Edl {
 			if (desc.getNbDef() > MAXDEF) {
 				erreur(NONFATALE, "L'unité \"" + nomUnites[i]
 						+ "\" a plus de définitions que supporté : (" + desc.getNbDef() + " > " + MAXDEF + ") !!");
-				nbErr++;
 			}
 			if (desc.getNbRef() > MAXREF) {
 				erreur(NONFATALE, "L'unité \"" + nomUnites[i]
 						+ "\" a plus de définitions que supporté : (" + desc.getNbRef() + " > " + MAXREF + ") !!");
-				nbErr++;
 			}
 
 			// Remplissage de la table des translations
@@ -251,7 +249,6 @@ public class Edl {
 			for (int k = 1; k <= desc.getNbDef(); ++k) {
 				if (presentDef(desc.getDefNomProc(k)) != 0) {
 					erreur(NONFATALE, "La procédure \"" + desc.getDefNomProc(k) + "\" a déjà été définie!");
-					nbErr++;
 				} else {
 					tabDef[nbDef + 1] = new DicoDefElt();
 					tabDef[nbDef + 1].nomProc = desc.getDefNomProc(k);
@@ -275,13 +272,11 @@ public class Edl {
 				int idDef = presentDef(nomRef);
 				if (idDef == 0) {
 					erreur(NONFATALE, "La procédure \"" + nomRef + "\" n'est définie dans aucun module!");
-					nbErr++;
 				} else {
 					if (desc.getRefNbParam(k) != tabDef[idDef].nbParam) {
 						erreur(NONFATALE, "La référence \"" + nomRef + "\" n'a pas le même nombre de paramètres (" +
 								desc.getRefNbParam(k) + " ) avec la définition trouvée (" + tabDef[idDef].nbParam +
 								") !!");
-						nbErr++;
 					}
 					tabRef[i].tabAdr[k - 1] = tabDef[idDef].adPo;
 				}

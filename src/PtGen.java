@@ -529,6 +529,9 @@ public class PtGen {
 
 			case 16: // Ajout d'une fonction def
             {
+				if (desc.getUnite().equals("programme")) {
+					UtilLex.messErr("Attention !! Seul un module peut déclarer une définition !!");
+				}
                 String ident = UtilLex.chaineIdent(UtilLex.numIdCourant);
                 if (desc.presentDef(ident) != 0) {
                     UtilLex.messErr("Attention !! définition de procédure \"" + ident + "\" déjà déclarée !");

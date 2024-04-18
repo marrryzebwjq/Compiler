@@ -2,6 +2,7 @@
 
 1. Correction de la V2 :
 _ Appel de procédures : vérifications de type et catégorie sur les paramètres sur les mauvais indices à cause de bc.
+_ Ajout defs et refs.
 
 2. Editions de liens 
 _ A priori, tout fonctionne.
